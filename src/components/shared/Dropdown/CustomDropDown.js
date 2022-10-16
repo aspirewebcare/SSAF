@@ -18,6 +18,7 @@ const CustomDropDown = ({defaultValue='', register, children, bodyCss = '', butt
         return () => {
             document.removeEventListener('click', handleClickOutside, true);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dropSort]);
 
     return (
@@ -61,12 +62,14 @@ export const SenderDropDown = ({defaultValue, closeDrop = false, children, bodyC
         return () => {
             document.removeEventListener('click', handleClickOutside, true);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dropSort]);
 
     useEffect(() => {
         if (dropSort) {
             setDropSort(false)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [closeDrop])
 
     return (
@@ -90,7 +93,7 @@ export const CustomSelectWithSearch = ({ onClose, search, setSearch, children, b
     const [dropSort, setDropSort] = useState(false)
     const ref = useRef(null);
     const button = useRef(null);
-    const [selectDrop, setSelectDrop] = useState({ value: '', text: '' });
+    const [selectDrop] = useState({ value: '', text: '' });
 
     useEffect(() => {
         const handleClickOutside = (event) => {

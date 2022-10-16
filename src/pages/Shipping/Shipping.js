@@ -179,7 +179,7 @@ const Shipping = () => {
           />
 
           <SearchInput searchRef={searchRef} setSearch={setSearch} />
-          <div className="flex  md:gap-5">
+          <div className="flex gap-2 md:gap-5">
             <SortButton
               sort={sort}
               sortChange={sortChange}

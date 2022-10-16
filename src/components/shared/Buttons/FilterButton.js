@@ -7,7 +7,7 @@ const FilterButton = ({filterBtnclick}) => {
         <CustomButton
         hadleClick={filterBtnclick}
         block={false}
-        btnClass="lg:w-[107px] lg:h-[46px] h-[56px] text-center text-sm font-normal rounded-lg w-[56px] border border-[#FE0000] text-[#FE0000]"
+        btnClass="lg:w-[107px] lg:h-[46px] h-[46px] text-center text-sm font-normal rounded-lg w-[56px] border border-[#FE0000] text-[#FE0000]"
         text={
           <p className="flex justify-center items-center gap-2">
             <icons.filter />

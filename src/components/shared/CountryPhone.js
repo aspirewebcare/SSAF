@@ -30,9 +30,7 @@ const CountrySelect = ({ items, customClass = "" }) => {
   const [search, setSearch] = useState('');
   const [filterItems, setFilterItems] = useState([]);
   const [closeDrop, setCloseDrop] = useState(false);
-  const handleChange = (value) => {
-    setSelectedPerson(value);
-  };
+ 
 
   useEffect(() => {
     if (search === '') {
@@ -41,6 +39,8 @@ const CountrySelect = ({ items, customClass = "" }) => {
       let filter = items.filter(item => (typeof item.name === 'string') && item?.name.toLowerCase().includes(search.toLowerCase()))
       setFilterItems(filter)
     }
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
   const selectItem = (item) => {

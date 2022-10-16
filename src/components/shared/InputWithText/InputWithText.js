@@ -16,6 +16,7 @@ export const InputWithText = ({ register, item, demo = "" }) => {
     }else{
       setInputType(type)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showPass])
   return (
     <div>

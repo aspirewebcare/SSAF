@@ -42,7 +42,7 @@ const trackings = [
     area: "New york, USA",
   },
 ];
-const RecordDetails = ({ setRightSidebarOpen, recordDetails }) => {
+const RecordDetails = ({  recordDetails }) => {
   const [itemInOffice, setItemInOffice] = useState(false);
   const [forChromeMobile, setForChromeMobile] = useState(false);
 

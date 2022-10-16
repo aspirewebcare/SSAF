@@ -6,6 +6,7 @@ import CustomButton from "../../../components/shared/Buttons/CustomButton";
 import Header from "../../../components/shared/Header";
 import icons from "../../../components/shared/icons";
 import Modal from "../../../components/shared/Modal/Modal";
+import RightSidebar from "../../../components/shared/RightSidebar/RightSidebar";
 import { RecordItemsInfo as ShippingInfo } from "../../../DummyData/DummyData";
 
 
@@ -56,6 +57,7 @@ const EditShipping = () => {
     useEffect(() => {
         let findItem = ShippingInfo.find(item => Number(item.id) === Number(shippingId))
         setShippingDetails(findItem)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 
@@ -64,6 +66,9 @@ const EditShipping = () => {
     }
     return (
         <div className="container  mx-auto  pt-12 lg:pt-0 relative  overflow-hidden">
+            <RightSidebar>
+            </RightSidebar>
+
             <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
                 <div className="mt-2 flex flex-col items-center justify-center">
                     <h1 className="text-2xl font-bold text-center mt-5 mb-3">Submited</h1>

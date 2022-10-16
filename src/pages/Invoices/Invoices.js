@@ -152,38 +152,39 @@ const Invoices = () => {
       >
         <div className="flex justify-end items-center gap-2 lg:gap-5 mt-4 lg:mt-0  w-full ml-auto">
           <SearchInput searchRef={searchRef} setSearch={setSearch} />
-          <SortButton
-            sort={sort}
-            sortChange={sortChange}
-            setFilter={setFilterInvoicesInfo}
-            data={filterInvoicesInfo}
-            arr={[
-              {
-                id: 1,
-                name: "Date",
-                arr: [
-                  { id: 1, name: "Ascending" },
-                  {
-                    id: 2,
-                    name: "Descending",
-                  },
-                ],
-              },
-              {
-                id: 2,
-                name: "Amount",
-                arr: [
-                  { id: 1, name: "Low to High" },
-                  {
-                    id: 2,
-                    name: "High to Low",
-                  },
-                ],
-              },
-            ]}
-          />
-
-          <FilterButton filterBtnclick={filterBtnclick} />
+          <div className="flex gap-2 md:gap-5">
+            <SortButton
+              sort={sort}
+              sortChange={sortChange}
+              setFilter={setFilterInvoicesInfo}
+              data={filterInvoicesInfo}
+              arr={[
+                {
+                  id: 1,
+                  name: "Date",
+                  arr: [
+                    { id: 1, name: "Ascending" },
+                    {
+                      id: 2,
+                      name: "Descending",
+                    },
+                  ],
+                },
+                {
+                  id: 2,
+                  name: "Amount",
+                  arr: [
+                    { id: 1, name: "Low to High" },
+                    {
+                      id: 2,
+                      name: "High to Low",
+                    },
+                  ],
+                },
+              ]}
+            />
+            <FilterButton filterBtnclick={filterBtnclick} />
+          </div>
         </div>
       </Header>
 
