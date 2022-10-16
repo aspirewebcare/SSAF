@@ -191,7 +191,7 @@ const AddNewItem = () => {
           </div>
           <div className="w-1/2">
             <p className={titleCss}>Item weight</p>
-            <div className="pr-3 border rounded-lg w-full flex items-center my-2">
+            <div className="pr-3 border rounded-lg w-full flex items-center mt-2">
               <input
                 placeholder="Enter item Weight"
                 className="outline-none py-3 px-3 w-full rounded-lg"
@@ -206,7 +206,7 @@ const AddNewItem = () => {
         <div className="py-2">
           <p className="font-semibold text-sm">Item worth</p>
 
-          <div className="pr-3 border rounded-lg w-full flex items-center my-2">
+          <div className="pr-3 border rounded-lg w-full flex items-center mt-2">
             <input
               placeholder="Enter item worth"
               className="outline-none py-3 px-3 w-full rounded-lg"

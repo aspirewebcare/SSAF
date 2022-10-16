@@ -2,12 +2,7 @@ import React from "react";
 import icons from "../shared/icons";
 
 const ShowShippingDetails = ({ itemDetails = {} }) => {
-  const deleteShipping = () => {
-    console.log("click delete ");
-  };
-  const editShipping = () => {
-    console.log("click edit");
-  };
+
   return (
     <div>
       <div className="flex justify-between items-center mt-5 mb-5">
@@ -16,7 +11,7 @@ const ShowShippingDetails = ({ itemDetails = {} }) => {
             Source Office
           </p>
           <p className="font-medium capitalize w-fit whitespace-nowrap">
-            {itemDetails.source}
+            {itemDetails?.source}
           </p>
         </div>
         <div className="w-1/2">
@@ -24,7 +19,7 @@ const ShowShippingDetails = ({ itemDetails = {} }) => {
             Destination Office
           </p>
           <p className="font-medium capitalize w-fit whitespace-nowrap">
-            {itemDetails.destination}
+            {itemDetails?.destination}
           </p>
         </div>
       </div>
@@ -34,7 +29,7 @@ const ShowShippingDetails = ({ itemDetails = {} }) => {
             Tracking Number
           </p>
           <p className="font-medium capitalize w-fit whitespace-nowrap">
-            {itemDetails.tracking_number}
+            {itemDetails?.tracking_number}
           </p>
         </div>
         <div className="w-1/2">
@@ -42,7 +37,7 @@ const ShowShippingDetails = ({ itemDetails = {} }) => {
             Date
           </p>
           <p className="font-medium capitalize w-fit whitespace-nowrap">
-            {itemDetails.date}
+            {itemDetails?.date}
           </p>
         </div>
       </div>
@@ -51,7 +46,7 @@ const ShowShippingDetails = ({ itemDetails = {} }) => {
           Consignee
         </p>
         <p className="font-medium capitalize w-fit whitespace-nowrap">
-          {itemDetails.consignee}
+          {itemDetails?.consignee?.first_name}
         </p>
       </div>
       <div className="w-full mb-5">
@@ -59,7 +54,7 @@ const ShowShippingDetails = ({ itemDetails = {} }) => {
           Shipping Weight
         </p>
         <p className="font-medium capitalize w-fit whitespace-nowrap">
-          {itemDetails.shipping_weight}
+          {itemDetails?.shipping_weight}
         </p>
       </div>
       <div className="w-full mb-5">
@@ -76,7 +71,7 @@ const ShowShippingDetails = ({ itemDetails = {} }) => {
             Delivery option
           </p>
           <p className="font-medium capitalize w-fit whitespace-nowrap">
-            {itemDetails.delivery_option}
+            {itemDetails?.delivery_option}
           </p>
         </div>
         <div className="w-1/2">
@@ -84,7 +79,7 @@ const ShowShippingDetails = ({ itemDetails = {} }) => {
             Service Type
           </p>
           <p className="font-medium capitalize w-fit whitespace-nowrap">
-            {itemDetails.service_type}
+            {itemDetails?.service_type}
           </p>
         </div>
       </div>
@@ -94,7 +89,7 @@ const ShowShippingDetails = ({ itemDetails = {} }) => {
             Need Insurance
           </p>
           <p className="font-medium capitalize w-fit whitespace-nowrap">
-            {itemDetails.insurance}
+            {itemDetails?.insurance}
           </p>
         </div>
         <div className="w-1/2">
@@ -102,7 +97,7 @@ const ShowShippingDetails = ({ itemDetails = {} }) => {
             Need Packaging
           </p>
           <p className="font-medium capitalize w-fit whitespace-nowrap">
-            {itemDetails.packaging}
+            {itemDetails?.packaging}
           </p>
         </div>
       </div>
@@ -112,7 +107,7 @@ const ShowShippingDetails = ({ itemDetails = {} }) => {
             Invoice
           </p>
           <a
-            href={itemDetails.invoice}
+            href={itemDetails?.invoice}
             download
             className="font-medium capitalize w-fit whitespace-nowrap flex  items-center gap-1 text-red-500  mt-1"
           >
@@ -124,7 +119,7 @@ const ShowShippingDetails = ({ itemDetails = {} }) => {
             Label
           </p>
           <a
-            href={itemDetails.label}
+            href={itemDetails?.label}
             download
             className="font-medium capitalize w-fit whitespace-nowrap flex  items-center gap-1 text-red-500 mt-1"
           >

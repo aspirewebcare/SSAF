@@ -3,7 +3,6 @@ import CustomButton from "../Buttons/CustomButton";
 import icons from "../icons";
 
 const RightSidebar = ({
-  isBtn = true,
   childClass = "",
   children,
   title,
@@ -69,7 +68,7 @@ const RightSidebar = ({
   return (
     <form onSubmit={handleSubmit(btnHandleClick)}>
       <div
-        className={`fixed w-full h-screen  left-0 top-0 bg-gray-900/50 !z-[220] ${rightSidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        className={`fixed w-full h-screen  left-0 top-0 bg-gray-900/50 !z-[220]  ${rightSidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"
           } duration-500`}
       ></div>
       <div
@@ -89,7 +88,7 @@ const RightSidebar = ({
           </div>
         </div>
         <div
-          className={`w-full h-[62vh] overflow-y-auto overflow-x-hidden lg:h-[76vh] my-5 pl-7  pr-5 ${childClass}`}
+          className={`w-full h-[62vh] overflow-y-auto overflow-x-hidden lg:h-[80vh] my-5 pl-7 pb-10  pr-5 ${childClass}`}
         >
           {children}
         </div>

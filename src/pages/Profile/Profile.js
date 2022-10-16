@@ -10,12 +10,13 @@ const Profile = () => {
       <Header name={`My Profile`} />
       <section className="bg-white rounded-lg p-8  w-full lg:w-[1140px]">
         <div className="flex gap-8 items-center">
-          <div className="relative w-[100px] h-[100px] rounded-full ">
+          <label htmlFor="image_upload" className="cursor-pointer relative w-[100px] h-[100px] rounded-full ">
             <img src={profile} alt="profile_image" />
             <div className="absolute -right-1 bottom-0 w-8  h-8 flex  justify-center items-center bg-white rounded-full p-[3px]">
+              <input className="hidden" type="file" name="image_upload" id="image_upload" />
               <img className="w-full" src={edit} alt="edit" />
             </div>
-          </div>
+          </label>
           <div>
             <p className="font-semibold text-2xl">John Parker</p>
             <p className="">Employee</p>
@@ -229,8 +230,8 @@ const Profile = () => {
             </select>
           </div>
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 };
 

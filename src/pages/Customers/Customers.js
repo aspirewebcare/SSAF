@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 import usaFlag from "../../assets/images/usa.svg";
 import AddNewCustomer from "../../components/Customers/AddNewCustomer";
 import CustomButton from "../../components/shared/Buttons/CustomButton";
+import FilterButton from "../../components/shared/Buttons/FilterButton";
 import MyDropdown from "../../components/shared/Dropdown/Dropdown";
 import Header from "../../components/shared/Header";
 import icons from "../../components/shared/icons";
 import InputLabel from "../../components/shared/InputLabel/InputLabel";
 import RightSidebar from "../../components/shared/RightSidebar/RightSidebar";
+import SearchInput from "../../components/shared/SearchInput/SearchInput";
 import { countries } from "../../DummyData/allCountryJson";
 import { CustomersInfo } from "../../DummyData/DummyData";
 import { FilterData } from "../../hooks/FilterData";
@@ -65,6 +67,14 @@ const Customers = () => {
 
 
   const btnHandleClick = (data) => {
+    if (filterComInfo.title === "Filter") filterData(data)
+    if (filterComInfo.title === "Add new customer") addNewCusomter(data)
+  };
+  const addNewCusomter = (data) => {
+    console.log(data)
+  }
+
+  const filterData = (data) => {
     let bySearch = [];
     for (const [key, value] of Object.entries(data)) {
       bySearch.push({ text: value, search: key });
@@ -73,8 +83,7 @@ const Customers = () => {
 
     setFilterCustomersInfo(filterData);
     setIsFilter(true);
-  };
-
+  }
   const useFormReset = () => {
     reset((formValues) => {
       Object.keys(formValues).forEach((key) => {
@@ -113,7 +122,7 @@ const Customers = () => {
           />
         )}
         {filterComInfo.title === "Add new customer" && (
-          <AddNewCustomer  register={register} errors={errors} setRightSidebarOpen={setRightSidebarOpen} />
+          <AddNewCustomer register={register} errors={errors} setRightSidebarOpen={setRightSidebarOpen} />
         )}
       </RightSidebar>
       <Header
@@ -134,31 +143,8 @@ const Customers = () => {
             }
           />
 
-          <div className="w-full lg:w-[230px] bg-white border rounded-lg flex items-center gap-2 px-3">
-            <icons.search className="text-gray-400 text-2xl lg:text-xl" />
-            <input
-              ref={searchRef}
-              onChange={(e) => setSearch(e.target.value)}
-              className="text-base lg:text-[13px] w-full outline-none text-gray-600 py-3"
-              placeholder="Search anything"
-              type="search"
-              name=""
-              id=""
-            />
-          </div>
-          <CustomButton
-            hadleClick={filterBtnclick}
-            block={false}
-            btnClass="lg:w-fit lg:h-[46px] h-[56px] px-5 text-sm font-normal rounded-lg w-[56px] border border-[#FE0000] text-[#FE0000]"
-            text={
-              <p className="flex items-center gap-2">
-                <icons.filter />
-                <span className="text-[15px] hidden lg:block">
-                  filters
-                </span>{" "}
-              </p>
-            }
-          />
+          <SearchInput searchRef={searchRef} setSearch={setSearch} />
+          <FilterButton filterBtnclick={filterBtnclick} />
         </div>
       </Header>
 
@@ -169,7 +155,7 @@ const Customers = () => {
           search={search}
         />
       </div>
-    </div>
+    </div >
   );
 };
 
@@ -311,7 +297,7 @@ export const FilterComponent = ({
   ];
 
   return (
-    <div>
+    <div className="pb-4">
       <InputLabel
         errors={errors}
         register={register}
@@ -367,7 +353,7 @@ export const FilterComponent = ({
         <p className="font-semibold text-sm">Country</p>
         <select
           {...register("country")}
-          className={`border text-left rounded-md px-3 py-[15px] w-full mt-2 mb-4 flex items-center ${errors.country ? "!border-red" : ""
+          className={`border text-left rounded-md px-3 py-[15px] w-full mt-2 flex items-center ${errors.country ? "!border-red" : ""
             }`}
           name="country"
           id="country">
@@ -388,7 +374,7 @@ export const FilterComponent = ({
 
         <select
           {...register("state")}
-          className="border text-left rounded-md  px-3 py-[15px] w-full mt-2 mb-4 flex items-center"
+          className="border text-left rounded-md  px-3 h-[56px] w-full mt-2  flex items-center"
           name="state"
           id="state"
         >
@@ -410,7 +396,7 @@ export const FilterComponent = ({
 
         <select
           {...register("city")}
-          className="border text-left rounded-md  px-3 py-[15px] w-full mt-2 mb-4 flex items-center"
+          className="border text-left rounded-md  px-3 h-[56px] w-full mt-2  flex items-center"
           name="city"
           id="city"
         >
@@ -426,7 +412,7 @@ export const FilterComponent = ({
         </select>
       </div>
       {isFilter && (
-        <p className="text-[#2DA400] font-semibold">
+        <p className="text-[#2DA400] font-semibold pt-3">
           {Array.isArray(filterCustomersInfo) && filterCustomersInfo.length}{" "}
           Results found.
         </p>

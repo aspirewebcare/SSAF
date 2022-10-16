@@ -9,6 +9,7 @@ import Dashboard from "../../pages/dashbaord/index.js";
 import Invoices from "../../pages/Invoices/Invoices.js";
 import Profile from "../../pages/Profile/Profile.js";
 import RecordItems from "../../pages/RecordItems/RecordItems.js";
+import EditShipping from "../../pages/Shipping/EditShipping/EditShipping.js";
 import NewShipping from "../../pages/Shipping/NewShipping/NewShipping.js";
 import Shipping from "../../pages/Shipping/Shipping.js";
 import DashboardHeader from "../shared/DashboardHeader/DashboardHeader.js";
@@ -72,8 +73,13 @@ const PageRoutes = () => {
       path: "/new-shipping",
       component: <NewShipping />,
     },
-    {
+     {
       id: 12,
+      path: "/edit-shipping/:shippingId",
+      component: <EditShipping />,
+    },
+    {
+      id: 13,
       path: "/customer/:customerId",
       component: <CustomerDetailsPage />,
     },

@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/shared/Buttons/CustomButton";
+import FilterButton from "../../components/shared/Buttons/FilterButton";
 import SortButton from "../../components/shared/Buttons/SortButton";
-import MyDropdown from "../../components/shared/Dropdown/Dropdown";
 import Header from "../../components/shared/Header";
 import icons from "../../components/shared/icons";
 import InputLabel from "../../components/shared/InputLabel/InputLabel";
 import RightSidebar from "../../components/shared/RightSidebar/RightSidebar";
+import SearchInput from "../../components/shared/SearchInput/SearchInput";
 import ShowShippingDetails from "../../components/ShowShippingDetails/ShowShippingDetails";
 import { RecordItemsInfo as ShippingInfo } from "../../DummyData/DummyData";
 import { FilterData } from "../../hooks/FilterData";
@@ -26,7 +27,7 @@ const Shipping = () => {
   const {
     register,
     handleSubmit,
-    reset,
+    
     formState: { errors },
   } = useForm();
   const [isFilter, setIsFilter] = useState(false);
@@ -69,7 +70,16 @@ const Shipping = () => {
     // eslint-disable-next-line
   }, [search]);
 
+
   const btnHandleClick = (data) => {
+    if (filterComInfo.title === "Filter") filterData(data)
+    if (filterComInfo.title === "Shipping Details") deleteRecord(data)
+  };
+  const deleteRecord = (data) => {
+    console.log(data)
+  }
+
+  const filterData = (data) => {
     let bySearch = [];
     for (const [key, value] of Object.entries(data)) {
       bySearch.push({ text: value, search: key });
@@ -77,17 +87,12 @@ const Shipping = () => {
     let filterData = FilterData(ShippingInfo, bySearch);
     setFilterShippingInfo(filterData);
     setIsFilter(true);
-  };
+  }
 
-  const useFormReset = () => {
-    reset((formValues) => {
-      Object.keys(formValues).forEach((key) => {
-        formValues[key] = "";
-      });
-      return { ...formValues };
-    });
-    setFilterShippingInfo(ShippingInfo);
-    setIsFilter(false);
+  const editForm = () => {
+    console.log(shippingDetails)
+    navigate(`/edit-shipping/${shippingDetails.id}`)
+    setRightSidebarOpen(false)
   };
 
   const sortChange = (isChecked, name, type) => {
@@ -136,14 +141,14 @@ const Shipping = () => {
         rightSidebarOpen={rightSidebarOpen}
         setRightSidebarOpen={setRightSidebarOpen}
         applyBtn={filterComInfo.applyBtn}
-        cancelClick={useFormReset}
+        cancelClick={editForm}
         cancelBtn={filterComInfo.cancelBtn}
         btnHandleClick={btnHandleClick}
         handleSubmit={handleSubmit}
-        simpleRed={filterComInfo.title === "Shipping Details" ?true:false}
+        simpleRed={filterComInfo.title === "Shipping Details" ? true : false}
       >
         {filterComInfo.title === "Filter" && (
-          <FilterCoponent
+          <FilterComponent
             filterShippingInfo={filterShippingInfo}
             errors={errors}
             register={register}
@@ -173,65 +178,39 @@ const Shipping = () => {
             }
           />
 
-          <div className="w-full lg:w-[230px] bg-white border rounded-lg flex items-center gap-2 px-3">
-            <icons.search className="text-gray-400 text-2xl lg:text-xl" />
-            <input
-              ref={searchRef}
-              onChange={(e) => setSearch(e.target.value)}
-              className="text-base lg:text-[13px] w-full outline-none text-gray-600 py-3 "
-              placeholder="Search anything"
-              type="search"
-              name=""
-              id=""
-            />
-          </div>
+          <SearchInput searchRef={searchRef} setSearch={setSearch} />
           <div className="flex  md:gap-5">
-           
-              <SortButton
-                sort={sort}
-                sortChange={sortChange}
-                setFilter={setFilterShippingInfo}
-                data={filterShippingInfo}
-                arr={[
-                  {
-                    id: 1,
-                    name: "Date",
-                    arr: [
-                      { id: 1, name: "Ascending" },
-                      {
-                        id: 2,
-                        name: "Descending",
-                      },
-                    ],
-                  },
-                  {
-                    id: 2,
-                    name: "Type",
-                    arr: [
-                      { id: 1, name: "Consignee" },
-                      {
-                        id: 2,
-                        name: "Customer",
-                      },
-                    ],
-                  },
-                ]}
-              />
-
-
-            <CustomButton
-              hadleClick={filterBtnclick}
-              block={false}
-              btnClass="w-fit lg:h-[46px] h-[50px] px-5 text-sm font-normal rounded-lg  border border-[#FE0000] text-[#FE0000] mt-[2px]"
-              text={
-                <p className="flex items-center gap-2">
-                  <icons.filter />
-                  <span className="text-[15px] hidden lg:block">
-                    filters
-                  </span>{" "}
-                </p>
-              }
+            <SortButton
+              sort={sort}
+              sortChange={sortChange}
+              setFilter={setFilterShippingInfo}
+              data={filterShippingInfo}
+              arr={[
+                {
+                  id: 1,
+                  name: "Date",
+                  arr: [
+                    { id: 1, name: "Ascending" },
+                    {
+                      id: 2,
+                      name: "Descending",
+                    },
+                  ],
+                },
+                {
+                  id: 2,
+                  name: "Type",
+                  arr: [
+                    { id: 1, name: "Consignee" },
+                    {
+                      id: 2,
+                      name: "Customer",
+                    },
+                  ],
+                },
+              ]}
             />
+            <FilterButton filterBtnclick={filterBtnclick} />
           </div>
         </div>
       </Header>
@@ -270,39 +249,9 @@ const ShippingAll = ({ filterShippingInfo, shippingItemClick }) => {
 };
 
 const ShippingLi = ({ onClick, Shipping }) => {
-  const ref = useRef(null)
-  const ref2 = useRef(null)
-  const items = [
-    {
-      id: 1,
-      name: <span>Edit</span>,
-      icon: "",
-      handleChange: editShipping,
-    },
-    {
-      id: 2,
-      name: <span>Delete</span>,
-      icon: "",
-      handleChange: deleteShipping,
-    },
-  ];
-
-  function editShipping() {
-    console.log("Edit Shipping");
-  }
-  function deleteShipping() {
-    console.log("Delete Shipping");
-  }
-
-  const customerClick = (event) => {
-    let isCLick = (ref.current && !ref.current.contains(event.target)) && (ref2.current && !ref2.current.contains(event.target))
-    if (isCLick) {
-      onClick(Shipping);
-    }
-  };
+ 
   return (
     <li
-      onClick={(e) => customerClick(e)}
       className=" w-full md:w-1/2 lg:w-full p-2 lg:p-0"
     >
       <div className="flex flex-col lg:flex-row items-start  lg:items-center gap-3  justify-between p-5  rounded-lg bg-white shadow-sm cursor-pointer">
@@ -314,17 +263,12 @@ const ShippingLi = ({ onClick, Shipping }) => {
             <div className="font-medium capitalize w-fit whitespace-nowrap">
               {Shipping.tracking_number ? Shipping.tracking_number : "-"}
             </div>
-            <MyDropdown
-              dropCss='lg:hidden'
-              btnText={
-                <span
-                  ref={ref2}
-                  className="lg:hidden bg-gray-100 rounded-full w-[45px] h-[45px] flex justify-center items-center"
-                >
-                  <icons.threeBarIcon className="text-xl " />
-                </span>}
-              items={items}
-            />
+            <span
+          onClick={() => onClick(Shipping)}
+            className="lg:hidden bg-gray-100 rounded-full w-[45px] h-[45px] flex justify-center items-center"
+          >
+            <icons.threeBarIcon className="text-xl " />
+          </span>
           </div>
         </div>
         <div className="w-3/12">
@@ -353,29 +297,25 @@ const ShippingLi = ({ onClick, Shipping }) => {
         </div>
 
         <div className="min-w-[110px] lg:flex  justify-center hidden">
-          <MyDropdown
-            btnText={
-              <span
-                ref={ref}
-                className=" bg-gray-100 rounded-full w-[45px] h-[45px] flex justify-center items-center"
-              >
-                <icons.threeBarIcon className="text-xl " />
-              </span>}
-            items={items}
-          />
+          <span
+            onClick={() => onClick(Shipping)}
+            className=" bg-gray-100 rounded-full w-[45px] h-[45px] flex justify-center items-center"
+          >
+            <icons.threeBarIcon className="text-xl " />
+          </span>
         </div>
       </div>
-    </li>
+    </li >
   );
 };
 
-const FilterCoponent = ({ register, filterShippingInfo, isFilter }) => {
+const FilterComponent = ({ register, filterShippingInfo, isFilter }) => {
   return (
     <div>
       <div>
         <InputLabel
           register={register}
-          label="Source (optional)"
+          label="Source"
           placeholder="Source"
           name="source"
           required={false}
@@ -383,9 +323,9 @@ const FilterCoponent = ({ register, filterShippingInfo, isFilter }) => {
         <br />
         <InputLabel
           register={register}
-          label="Order Number (optional)"
-          placeholder="Order Number"
-          name="order_number"
+          label="Destination"
+          placeholder="Destination"
+          name="destination"
           required={false}
         />
         <br />
@@ -399,40 +339,39 @@ const FilterCoponent = ({ register, filterShippingInfo, isFilter }) => {
         />
         <br />
 
-        <p className="font-bold text-sm text-gray-800 ">Carrier</p>
+        <p className="font-bold text-sm text-gray-800 ">Service  Type</p>
         <select
-          {...register("carrier")}
+          {...register("service_type")}
           className="border rounded-md px-3 py-[15px] w-full mt-2 mb-4"
-          name="carrier"
-          id="carrier"
+          name="service_type"
+          id="service_type"
         >
           <option value="" hidden>
-            Carrier
+            Choose Service type
           </option>
-          <option value="Fedex">Fedex</option>
-          <option value="Usps">Usps</option>
-          <option value="Amazon">Amazon</option>
+          <option value="regular">Regular</option>
+          <option value="express">Express</option>
         </select>
         <br />
 
-        <p className="font-bold text-sm text-gray-800 ">Status</p>
+        <p className="font-bold text-sm text-gray-800 ">Date</p>
         <select
-          {...register("status")}
+          {...register("date")}
           className="border rounded-md px-3 py-[15px] w-full mt-2 mb-4"
-          name="status"
-          id="status"
+          name="date"
+          id="date"
         >
           <option value="" hidden>
-            Status
+            Choose Date
           </option>
-          <option value="Dispatched">Dispatched</option>
-          <option value="In transi">In transit</option>
-          <option value="Out for delivery">Out for delivery</option>
-          <option value="Received">Received</option>
+          <option value="01/02/2022">01/02/2022</option>
+          <option value="25/08/2022">25/08/2022</option>
+          <option value="11/06/2022">11/06/2022</option>
+          <option value="20/10/2022">20/10/2022</option>
         </select>
       </div>
       {isFilter && (
-        <p className="text-[#2DA400] font-semibold">
+        <p className="text-[#2DA400] font-semibold pt-3">
           {Array.isArray(filterShippingInfo) && filterShippingInfo.length}{" "}
           Results found.
         </p>

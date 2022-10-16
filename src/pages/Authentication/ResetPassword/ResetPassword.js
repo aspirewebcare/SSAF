@@ -27,9 +27,9 @@ const ResetPassword = () => {
 
     let isPasswrodAllCurrent =
       passStrength.twelveCharacter &&
-      passStrength.upparcase_lowercase &&
-      passStrength.letter_number &&
-      passStrength.special_character
+        passStrength.upparcase_lowercase &&
+        passStrength.letter_number &&
+        passStrength.special_character
         ? true
         : false;
 
@@ -92,9 +92,9 @@ const ResetPassword = () => {
   }
 
   return (
-    <section className="flex  flex-col lg:flex-row items-center justify-center gap-10  bg-white min-h-screen">
+    <section className="flex   flex-col lg:flex-row items-center justify-center gap-10  bg-white min-h-screen">
       <form
-        className="xl:px-20 pt-10 pb-0  :py-10 w-full lg:w-1/2"
+        className="xl:px-20 pt-10 pb-0  lg:py-10 w-full lg:w-1/2"
         onSubmit={handleSubmit(formSubmit)}
       >
         <ResetForm
@@ -106,7 +106,7 @@ const ResetPassword = () => {
       </form>
       <div className="pb-10 lg:pb-0">
         <div className="w-8/12  mx-auto">
-          <div className="w-full  lg:py-0"> 
+          <div className="w-full  lg:py-0">
             <img className="w-full" src={LoginBg} alt="login_bg" />
           </div>
         </div>
@@ -174,9 +174,9 @@ const ResetForm = ({ watch, isPassMatch, passStrength, register }) => {
           {watch("password")?.length > 5 && (
             <>
               {passStrength.twelveCharacter &&
-              passStrength.upparcase_lowercase &&
-              passStrength.letter_number &&
-              passStrength.special_character ? (
+                passStrength.upparcase_lowercase &&
+                passStrength.letter_number &&
+                passStrength.special_character ? (
                 <span className="text-green-500 font-medium flex items-center  gap-1 duration-300">
                   Parfect!
                 </span>
@@ -228,9 +228,8 @@ const ResetForm = ({ watch, isPassMatch, passStrength, register }) => {
       <div className="mt-5">
         <InputWithText register={register} item={confirmPass} />
         <p
-          className={`text-red-600 font-medium text-sm my-1 text-right duration-150 ${
-            !isPassMatch ? "" : "hidden"
-          }`}
+          className={`text-red-600 font-medium text-sm my-1 text-right duration-150 ${!isPassMatch ? "" : "hidden"
+            }`}
         >
           Password doesn’t match!
         </p>

@@ -25,9 +25,9 @@ const Login = () => {
         <LoginForm register={register} />
       </form>
       <div className="pb-10 lg:pb-0">
-        <div className="w-8/12  mx-auto">
-          <div className="w-full  lg:py-0">
-            <img className="w-full" src={LoginBg} alt="login_bg" />
+      <div className="w-8/12  mx-auto">
+        <div className="w-full  lg:py-0">
+          <img className="w-full" src={LoginBg} alt="login_bg" />
           </div>
         </div>
       </div>

@@ -3,12 +3,14 @@ import { useForm } from "react-hook-form";
 import samplePdfFile from "../../assets/sample.pdf";
 import AddNewInvoiceItem from "../../components/Invoices/AddNewInvoiceItem";
 import CustomButton from "../../components/shared/Buttons/CustomButton";
+import FilterButton from "../../components/shared/Buttons/FilterButton";
 import SortButton from "../../components/shared/Buttons/SortButton";
 import MyDropdown from "../../components/shared/Dropdown/Dropdown";
 import Header from "../../components/shared/Header";
 import icons from "../../components/shared/icons";
 import InputLabel from "../../components/shared/InputLabel/InputLabel";
 import RightSidebar from "../../components/shared/RightSidebar/RightSidebar";
+import SearchInput from "../../components/shared/SearchInput/SearchInput";
 import { RecordItemsInfo as InvoicesInfo } from "../../DummyData/DummyData";
 import { FilterData } from "../../hooks/FilterData";
 
@@ -148,63 +150,40 @@ const Invoices = () => {
         mainCss="!h-[150px]"
         name={`Invoices (${filterInvoicesInfo.length})`}
       >
-        <div className="flex items-center gap-2 lg:gap-5 mt-4 lg:mt-0  w-full lg:w-fit ">
-          <div className="w-full lg:w-[230px] bg-white border rounded-lg flex items-center gap-2 px-3">
-            <icons.search className="text-gray-400 text-2xl lg:text-xl" />
-            <input
-              ref={searchRef}
-              onChange={(e) => setSearch(e.target.value)}
-              className="text-base lg:text-[13px] w-full outline-none text-gray-600 py-3"
-              placeholder="Search anything"
-              type="search"
-              name=""
-              id=""
-            />
-          </div>
-            <SortButton
-              sort={sort}
-              sortChange={sortChange}
-              setFilter={setFilterInvoicesInfo}
-              data={filterInvoicesInfo}
-              arr={[
-                {
-                  id: 1,
-                  name: "Date",
-                  arr: [
-                    { id: 1, name: "Ascending" },
-                    {
-                      id: 2,
-                      name: "Descending",
-                    },
-                  ],
-                },
-                {
-                  id: 2,
-                  name: "Amount",
-                  arr: [
-                    { id: 1, name: "Low to High" },
-                    {
-                      id: 2,
-                      name: "High to Low",
-                    },
-                  ],
-                },
-              ]}
-            />
-    
-          <CustomButton
-            hadleClick={filterBtnclick}
-            block={false}
-            btnClass="w-fit lg:h-[46px] h-[50px] px-5 text-sm font-normal rounded-lg border border-[#FE0000] text-[#FE0000]  mt-[2px]"
-            text={
-              <p className="flex items-center gap-2">
-                <icons.filter />
-                <span className="text-[15px] hidden lg:block">
-                  filters
-                </span>{" "}
-              </p>
-            }
+        <div className="flex justify-end items-center gap-2 lg:gap-5 mt-4 lg:mt-0  w-full ml-auto">
+          <SearchInput searchRef={searchRef} setSearch={setSearch} />
+          <SortButton
+            sort={sort}
+            sortChange={sortChange}
+            setFilter={setFilterInvoicesInfo}
+            data={filterInvoicesInfo}
+            arr={[
+              {
+                id: 1,
+                name: "Date",
+                arr: [
+                  { id: 1, name: "Ascending" },
+                  {
+                    id: 2,
+                    name: "Descending",
+                  },
+                ],
+              },
+              {
+                id: 2,
+                name: "Amount",
+                arr: [
+                  { id: 1, name: "Low to High" },
+                  {
+                    id: 2,
+                    name: "High to Low",
+                  },
+                ],
+              },
+            ]}
           />
+
+          <FilterButton filterBtnclick={filterBtnclick} />
         </div>
       </Header>
 
@@ -347,12 +326,12 @@ const FilterCoponent = ({ register, filterInvoicesInfo, isFilter = false }) => {
           register={register}
           label="Invoice Number"
           placeholder="Invoice Number"
-          name="invoice"
+          name="tracking_number"
           required={false}
         />
 
         {isFilter && (
-          <p className="text-[#2DA400] font-semibold">
+          <p className="text-[#2DA400] font-semibold pt-3">
             {Array.isArray(filterInvoicesInfo) && filterInvoicesInfo.length}{" "}
             Results found.
           </p>

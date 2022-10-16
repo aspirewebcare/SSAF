@@ -23,7 +23,7 @@ const ForgetPassword = () => {
     navigate("/reset-password")
   };
   return (
-    <section className="flex  flex-col lg:flex-row items-center justify-center gap-10  bg-white min-h-screen">
+    <section className="flex   flex-col lg:flex-row items-center justify-center gap-10  bg-white min-h-screen">
       <form
         className="xl:px-20 pt-10 pb-0 lg:py-10 w-full lg:w-1/2"
         onSubmit={handleSubmit(formSubmit)}

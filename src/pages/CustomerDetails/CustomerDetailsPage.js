@@ -111,17 +111,28 @@ const CustomerDetailsPage = () => {
         setFilterConsigneeInfo(CustomersInfo);
         setIsFilter(false);
     };
-    
-    const btnHandleClick = (data) => {
-        let bySearch = [];
+         
+  const btnHandleClick = (data) => {
+    if (filterComInfo.title === "Filter") filterData(data)
+    if (filterComInfo.title === "Consignee Details") deleteRecord(data)
+    if (filterComInfo.title === "Add new consignee" ) addNewConsignee(data)
+  };
+  const deleteRecord = (data) => {
+    console.log(data)
+  }
+    const addNewConsignee = (data) => {
+    console.log(data)
+  }
+
+  const filterData = (data) => {
+    let bySearch = [];
         for (const [key, value] of Object.entries(data)) {
           bySearch.push({ text: value, search: key });
         }
         let filterData = FilterData(CustomersInfo, bySearch);
-    
         setFilterConsigneeInfo(filterData);
         setIsFilter(true);
-      };
+  }
     
     return (
         <div className="pt-12 lg:pt-0 relative overflow-hidden">

@@ -78,7 +78,7 @@ const AddNewCustomer = ({ register, errors, setRightSidebarOpen }) => {
                     <p className="font-semibold text-sm">Country</p>
                     <select
                         {...register("country")}
-                        className="border text-left rounded-md  px-3 py-[15px] w-full mt-2  flex items-center"
+                        className="border text-left rounded-md  px-3 h-[56px] w-full mt-2  flex items-center"
                         name="country"
                         id="country"
                     >
@@ -96,7 +96,7 @@ const AddNewCustomer = ({ register, errors, setRightSidebarOpen }) => {
                     <p className="font-semibold text-sm">State</p>
                     <select
                         {...register("state")}
-                        className="border text-left rounded-md  px-3 py-[15px] w-full mt-2 flex items-center"
+                        className="border text-left rounded-md  px-3 h-[56px] w-full mt-2 flex items-center"
                         name="state"
                         id="state"
                     >
@@ -118,7 +118,7 @@ const AddNewCustomer = ({ register, errors, setRightSidebarOpen }) => {
                     <p className="font-semibold text-sm">City</p>
                     <select
                         {...register("city")}
-                        className="border text-left rounded-md  px-3 py-[15px] w-full mt-2 mb-4 flex items-center"
+                        className="border text-left rounded-md  px-3 h-[56px] w-full mt-2 flex items-center"
                         name="city"
                         id="city"
                     >

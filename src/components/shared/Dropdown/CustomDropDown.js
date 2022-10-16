@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import icons from '../icons';
 
-const CustomDropDown = ({ children, bodyCss = '', buttons = '', buttonCss = '', items = [] }) => {
+const CustomDropDown = ({defaultValue='', register, children, bodyCss = '', buttons = '', buttonCss = '', items = [] }) => {
     const [dropSort, setDropSort] = useState(false)
     const ref = useRef(null);
     const button = useRef(null);
     const [selectDrop, setSelectDrop] = useState({ value: '', text: '' });
 
     useEffect(() => {
+        setSelectDrop({value: defaultValue, text: defaultValue})
         const handleClickOutside = (event) => {
             if (dropSort && ref.current && !ref.current.contains(event.target) && button.current && !button.current.contains(event.target)) {
                 setDropSort(false)
@@ -21,8 +22,9 @@ const CustomDropDown = ({ children, bodyCss = '', buttons = '', buttonCss = '', 
 
     return (
         <div className=" relative">
-            <div ref={button} className={`w-fit bg-white border rounded-lg   cursor-pointer gap-2 px-3 py-[14px]  ${buttonCss}`} onClick={() => setDropSort(prev => !prev)} >
-                {selectDrop.value ? selectDrop.value : <span className=' text-gray-400'> {buttons}</span>}
+            <div   value={selectDrop.value ? selectDrop.value : null}  className={`w-fit bg-white  border rounded-lg   cursor-pointer gap-2 px-3 py-[14px]  ${buttonCss} ${selectDrop.value ? 'flex justify-between  items-center' : ''}`} onClick={() => setDropSort(prev => !prev)} >
+                {selectDrop.value ? <> <span>{selectDrop.value}</span><icons.arrowDown /> </> : <span className=' text-gray-400'> {buttons}</span>}
+
             </div>
             <div ref={ref} className={`${dropSort ? "visible opacity-100 translate-y-0" : 'invisible opacity-0 -translate-y-3'} duration-200 absolute z-[110]  shadow-lg shadow-gray-200  rounded-lg   p-2 top-12 right-0 w-[310px] h-[137px] bg-white ${bodyCss}`}>
                 <div className='flex  gap-3 justify-between py-3 pr-2'>
@@ -42,13 +44,14 @@ const CustomDropDown = ({ children, bodyCss = '', buttons = '', buttonCss = '', 
 export default CustomDropDown;
 
 
-export const SenderDropDown = ({ closeDrop = false, children, bodyCss = '', buttons = '', buttonCss = '', items = [] }) => {
+export const SenderDropDown = ({defaultValue, closeDrop = false, children, bodyCss = '', buttons = '', buttonCss = '', items = [] }) => {
     const [dropSort, setDropSort] = useState(false)
     const ref = useRef(null);
     const button = useRef(null);
-    const [selectDrop] = useState({ value: '', text: '' });
+    const [selectDrop,setSelectDrop] = useState({ value: '', text: '' });
 
     useEffect(() => {
+        setSelectDrop({value: defaultValue, text: defaultValue})
         const handleClickOutside = (event) => {
             if (dropSort && ref.current && !ref.current.contains(event.target) && button.current && !button.current.contains(event.target)) {
                 setDropSort(false)
@@ -71,7 +74,7 @@ export const SenderDropDown = ({ closeDrop = false, children, bodyCss = '', butt
             <div ref={button} className={`w-fit bg-white border rounded-lg   cursor-pointer gap-2 px-3 py-[14px]  ${buttonCss}`} onClick={() => setDropSort(prev => !prev)} >
                 {selectDrop.value ? selectDrop.value : <span className=' text-gray-400'> {buttons}</span>}
             </div>
-            <div ref={ref} className={`${dropSort ? "visible opacity-100 translate-y-0" : 'invisible opacity-0 -translate-y-3'} duration-200 absolute z-[110] shadow-lg  rounded-lg   p-2 top-16 right-0 w-[310px] h-[400px]  bg-white ${bodyCss}`}>
+            <div ref={ref} className={`${dropSort ? "visible opacity-100 translate-y-0" : 'invisible opacity-0 -translate-y-3'} duration-200 absolute z-[110] shadow-lg  rounded-lg   p-2 top-16 right-0 w-[310px] h-[324px]  bg-white ${bodyCss}`}>
                 <div className='py-3 pr-2'>
                     {children}
                 </div>
@@ -83,7 +86,7 @@ export const SenderDropDown = ({ closeDrop = false, children, bodyCss = '', butt
 
 
 
-export const CustomSelectWithSearch = ({onClose, search, setSearch, children, bodyCss = '', buttons = '', buttonCss = '', items = [] }) => {
+export const CustomSelectWithSearch = ({ onClose, search, setSearch, children, bodyCss = '', buttons = '', buttonCss = '', items = [] }) => {
     const [dropSort, setDropSort] = useState(false)
     const ref = useRef(null);
     const button = useRef(null);

@@ -71,7 +71,7 @@ export const CustomersInfo = [
   {
     id: 1,
     profile_img: profile1,
-    type:'Customer',
+    type: 'Customer',
     online_status: "active",
     first_name: "Peter",
     last_name: "Parker",
@@ -121,7 +121,7 @@ export const CustomersInfo = [
   {
     id: 2,
     profile_img: profile2,
-    type:'Customer',
+    type: 'Customer',
     online_status: "active",
     first_name: "John",
     last_name: "Doe",
@@ -171,7 +171,7 @@ export const CustomersInfo = [
   {
     id: 3,
     profile_img: profile5,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     first_name: "Dan",
     last_name: "Parker",
@@ -221,7 +221,7 @@ export const CustomersInfo = [
   {
     id: 4,
     profile_img: profile3,
-    type:'Customer',
+    type: 'Customer',
     online_status: "active",
     first_name: "Peter",
     last_name: "Parker",
@@ -271,7 +271,7 @@ export const CustomersInfo = [
   {
     id: 5,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     first_name: "Peter",
     last_name: "Parker",
@@ -321,7 +321,7 @@ export const CustomersInfo = [
   {
     id: 6,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     first_name: "Peter",
     last_name: "Parker",
@@ -371,7 +371,7 @@ export const CustomersInfo = [
   {
     id: 7,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     first_name: "Peter",
     last_name: "Parker",
@@ -421,7 +421,7 @@ export const CustomersInfo = [
   {
     id: 8,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     first_name: "Peter",
     last_name: "Parker",
@@ -471,7 +471,7 @@ export const CustomersInfo = [
   {
     id: 9,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     first_name: "Peter",
     last_name: "Parker",
@@ -521,7 +521,7 @@ export const CustomersInfo = [
   {
     id: 10,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     first_name: "Peter",
     last_name: "john",
@@ -571,7 +571,7 @@ export const CustomersInfo = [
   {
     id: 11,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     first_name: "Peter",
     last_name: "khan",
@@ -621,7 +621,7 @@ export const CustomersInfo = [
   {
     id: 12,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     first_name: "Peter",
     last_name: "Parker",
@@ -671,7 +671,7 @@ export const CustomersInfo = [
   {
     id: 13,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     first_name: "Peter",
     last_name: "Parker",
@@ -1088,11 +1088,11 @@ export const barChartData = {
 
 //Use for Fake All Drivers- Info
 export const RecordItemsInfo = [
- 
+
   {
     id: 2,
     profile_img: profile2,
-    type:'Customer',
+    type: 'Customer',
     online_status: "active",
     source: "Dason Market",
     order_number: "#4215",
@@ -1104,18 +1104,33 @@ export const RecordItemsInfo = [
     date: '12/02/2022',
     amount: '240',
     currency: 'USD',
-    consignee: 'Jasmine  Rocha',
-    shipping_weight: '520 kg',
+    shipping_weight: '520',
     delivery_option: 'Office  Pickup',
     insurance: 'No',
     packaging: 'Yes',
     invoice: '33',
-    label: 'lable file'
+    label: 'lable file',
+    sender: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    consignee: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    system_of_measure: 'system_mesure_1',
+    area: {
+      length: '12',
+      width: '50',
+      height: '20'
+    }
   },
   {
     id: 3,
     profile_img: profile5,
-    type:'Consignee',
+    type: 'Consignee',
     online_status: "inactive",
     source: "Tesco Market",
     order_number: "#3523",
@@ -1127,18 +1142,33 @@ export const RecordItemsInfo = [
     date: '11/02/2022',
     amount: '240',
     currency: 'USD',
-    consignee: 'Jasmine  Rocha',
-    shipping_weight: '520 kg',
+    shipping_weight: '520',
     delivery_option: 'Office  Pickup',
     insurance: 'No',
     packaging: 'Yes',
     invoice: '22',
-    label: 'lable file'
+    label: 'lable file',
+    sender: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    consignee: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    system_of_measure: 'system_mesure_1',
+    area: {
+      length: '12',
+      width: '50',
+      height: '20'
+    }
   },
   {
     id: 4,
     profile_img: profile3,
-    type:'Customer',
+    type: 'Customer',
     online_status: "active",
     source: "Tesco Market",
     order_number: "#6745",
@@ -1150,18 +1180,33 @@ export const RecordItemsInfo = [
     date: '10/02/2022',
     amount: '240',
     currency: 'USD',
-    consignee: 'Jasmine  Rocha',
-    shipping_weight: '520 kg',
+    shipping_weight: '520',
     delivery_option: 'Office  Pickup',
     insurance: 'No',
     packaging: 'Yes',
     invoice: '11',
-    label: 'lable file'
+    label: 'lable file',
+    sender: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    consignee: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    system_of_measure: 'system_mesure_1',
+    area: {
+      length: '12',
+      width: '50',
+      height: '20'
+    }
   },
   {
     id: 5,
-    profile_img: profile4,
-    type:'Consignee',
+    prfile_img: profile4,
+    type: 'Consignee',
     online_status: "inactive",
     source: "Tesco Market",
     order_number: "#9707",
@@ -1173,18 +1218,33 @@ export const RecordItemsInfo = [
     date: '09/02/2022',
     amount: '100',
     currency: 'USD',
-    consignee: 'Jasmine  Rocha',
-    shipping_weight: '520 kg',
+    shipping_weight: '520',
     delivery_option: 'Office  Pickup',
     insurance: 'No',
     packaging: 'Yes',
     invoice: '123',
-    label: 'lable file'
+    label: 'lable file',
+    sender: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    consignee: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    system_of_measure: 'system_mesure_1',
+    area: {
+      length: '12',
+      width: '50',
+      height: '20'
+    }
   },
   {
     id: 6,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     source: "Tesco Market",
     order_number: "#2147",
@@ -1196,18 +1256,33 @@ export const RecordItemsInfo = [
     date: '08/02/2022',
     amount: '50',
     currency: 'USD',
-    consignee: 'Jasmine  Rocha',
-    shipping_weight: '520 kg',
+    shipping_weight: '520',
     delivery_option: 'Office  Pickup',
     insurance: 'No',
     packaging: 'Yes',
     invoice: '444',
-    label: 'lable file'
+    label: 'lable file',
+    sender: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    consignee: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    system_of_measure: 'system_mesure_1',
+    area: {
+      length: '12',
+      width: '50',
+      height: '20'
+    }
   },
   {
     id: 7,
     profile_img: profile4,
-    type:'Consignee',
+    type: 'Consignee',
     online_status: "inactive",
     source: "Tesco Market",
     order_number: "#8730",
@@ -1219,18 +1294,33 @@ export const RecordItemsInfo = [
     date: '07/02/2022',
     amount: '70',
     currency: 'USD',
-    consignee: 'Jasmine  Rocha',
-    shipping_weight: '520 kg',
+    shipping_weight: '520',
     delivery_option: 'Office  Pickup',
     insurance: 'No',
     packaging: 'Yes',
     invoice: '555',
-    label: 'lable file'
+    label: 'lable file',
+    sender: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    consignee: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    system_of_measure: 'system_mesure_1',
+    area: {
+      length: '12',
+      width: '50',
+      height: '20'
+    }
   },
   {
     id: 8,
     profile_img: profile4,
-    type:'Consignee',
+    type: 'Consignee',
     online_status: "inactive",
     source: "Tesco Market",
     order_number: "#4215",
@@ -1242,18 +1332,33 @@ export const RecordItemsInfo = [
     date: '06/02/2022',
     amount: '240',
     currency: 'USD',
-    consignee: 'Jasmine  Rocha',
-    shipping_weight: '520 kg',
+    shipping_weight: '520',
     delivery_option: 'Office  Pickup',
     insurance: 'No',
     packaging: 'Yes',
     invoice: '666',
-    label: 'lable file'
+    label: 'lable file',
+    sender: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    consignee: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    system_of_measure: 'system_mesure_1',
+    area: {
+      length: '12',
+      width: '50',
+      height: '20'
+    }
   },
   {
     id: 9,
     profile_img: profile4,
-    type:'Consignee',
+    type: 'Consignee',
     online_status: "inactive",
     source: "Tesco Market",
     order_number: "#4215",
@@ -1265,18 +1370,33 @@ export const RecordItemsInfo = [
     date: '05/02/2022',
     amount: '240',
     currency: 'USD',
-    consignee: 'Jasmine  Rocha',
-    shipping_weight: '520 kg',
+    shipping_weight: '520',
     delivery_option: 'Office  Pickup',
     insurance: 'No',
     packaging: 'Yes',
     invoice: '555',
-    label: 'lable file'
+    label: 'lable file',
+    sender: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    consignee: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    system_of_measure: 'system_mesure_1',
+    area: {
+      length: '12',
+      width: '50',
+      height: '20'
+    }
   },
   {
     id: 10,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     source: "Tesco Market",
     order_number: "#4215",
@@ -1288,18 +1408,33 @@ export const RecordItemsInfo = [
     date: '04/02/2022',
     amount: '500',
     currency: 'USD',
-    consignee: 'Jasmine  Rocha',
-    shipping_weight: '520 kg',
+    shipping_weight: '520',
     delivery_option: 'Office  Pickup',
     insurance: 'No',
     packaging: 'Yes',
     invoice: '222',
-    label: 'lable file'
+    label: 'lable file',
+    sender: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    consignee: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    system_of_measure: 'system_mesure_1',
+    area: {
+      length: '12',
+      width: '50',
+      height: '20'
+    }
   },
   {
     id: 11,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     source: "Tesco Market",
     order_number: "#4215",
@@ -1311,18 +1446,33 @@ export const RecordItemsInfo = [
     date: '03/02/2022',
     amount: '360',
     currency: 'USD',
-    consignee: 'Jasmine  Rocha',
-    shipping_weight: '520 kg',
+    shipping_weight: '520',
     delivery_option: 'Office  Pickup',
     insurance: 'No',
     packaging: 'Yes',
     invoice: '123',
-    label: 'lable file'
+    label: 'lable file',
+    sender: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    consignee: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    system_of_measure: 'system_mesure_1',
+    area: {
+      length: '12',
+      width: '50',
+      height: '20'
+    }
   },
   {
     id: 12,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     source: "Tesco Market",
     order_number: "#4215",
@@ -1334,18 +1484,33 @@ export const RecordItemsInfo = [
     date: '02/02/2022',
     amount: '402',
     currency: 'USD',
-    consignee: 'Jasmine  Rocha',
-    shipping_weight: '520 kg',
+    shipping_weight: '520',
     delivery_option: 'Office  Pickup',
     insurance: 'No',
     packaging: 'Yes',
     invoice: '123',
-    label: 'lable file'
+    label: 'lable file',
+    sender: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    consignee: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    system_of_measure: 'system_mesure_1',
+    area: {
+      length: '12',
+      width: '50',
+      height: '20'
+    }
   },
   {
     id: 13,
     profile_img: profile4,
-    type:'Customer',
+    type: 'Customer',
     online_status: "inactive",
     source: "Tesco Market",
     order_number: "#4215",
@@ -1357,12 +1522,27 @@ export const RecordItemsInfo = [
     date: '01/02/2022',
     amount: '190',
     currency: 'USD',
-    consignee: 'Jasmine  Rocha',
-    shipping_weight: '520 kg',
+    shipping_weight: '520',
     delivery_option: 'Office  Pickup',
     insurance: 'No',
     packaging: 'Yes',
     invoice: '123',
-    label: 'lable file'
+    label: 'lable file',
+    sender: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    consignee: {
+      first_name: 'peter',
+      last_name: 'parker',
+      phone: '+81 2265 47887'
+    },
+    system_of_measure: 'system_mesure_1',
+    area: {
+      length: '12',
+      width: '50',
+      height: '20'
+    }
   }
 ];

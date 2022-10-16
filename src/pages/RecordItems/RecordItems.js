@@ -3,11 +3,13 @@ import { useForm } from "react-hook-form";
 import AddNewRecordItem from "../../components/RecordItems/AddNewRecordItem";
 import RecordDetails from "../../components/RecordItems/RecordDetails";
 import CustomButton from "../../components/shared/Buttons/CustomButton";
+import FilterButton from "../../components/shared/Buttons/FilterButton";
 import MyDropdown from "../../components/shared/Dropdown/Dropdown";
 import Header from "../../components/shared/Header";
 import icons from "../../components/shared/icons";
 import InputLabel from "../../components/shared/InputLabel/InputLabel";
 import RightSidebar from "../../components/shared/RightSidebar/RightSidebar";
+import SearchInput from "../../components/shared/SearchInput/SearchInput";
 import { RecordItemsInfo } from "../../DummyData/DummyData";
 import { FilterData } from "../../hooks/FilterData";
 
@@ -70,7 +72,20 @@ const RecordItems = () => {
     // eslint-disable-next-line
   }, [search]);
 
+
   const btnHandleClick = (data) => {
+    if (filterComInfo.title === "Filter") filterData(data)
+    if (filterComInfo.title === "Add New Item") addNewRecord(data)
+    if (filterComInfo.title === "Item Details") deleteRecord(data)
+  };
+  const deleteRecord = (data) => {
+    console.log(data)
+  }
+  const addNewRecord = (data) => {
+    console.log(data)
+  }
+
+  const filterData = (data) => {
     let bySearch = [];
     for (const [key, value] of Object.entries(data)) {
       bySearch.push({ text: value, search: key });
@@ -78,7 +93,10 @@ const RecordItems = () => {
     let filterData = FilterData(RecordItemsInfo, bySearch);
     setFilterRecordItemsInfo(filterData);
     setIsFilter(true);
-  };
+  }
+
+
+
 
   const useFormReset = () => {
     reset((formValues) => {
@@ -141,32 +159,8 @@ const RecordItems = () => {
               </p>
             }
           />
-
-          <div className="w-full lg:w-[230px] bg-white border rounded-lg flex items-center gap-2 px-3">
-            <icons.search className="text-gray-400 text-2xl lg:text-xl" />
-            <input
-              ref={searchRef}
-              onChange={(e) => setSearch(e.target.value)}
-              className="text-base lg:text-[13px] w-full outline-none text-gray-600 py-3"
-              placeholder="Search anything"
-              type="search"
-              name=""
-              id=""
-            />
-          </div>
-          <CustomButton
-            hadleClick={filterBtnclick}
-            block={false}
-            btnClass="lg:w-fit lg:h-[46px] h-[56px] px-5 text-sm font-normal rounded-lg w-[56px] border border-[#FE0000] text-[#FE0000]"
-            text={
-              <p className="flex items-center gap-2">
-                <icons.filter />
-                <span className="text-[15px] hidden lg:block">
-                  filters
-                </span>{" "}
-              </p>
-            }
-          />
+          <SearchInput searchRef={searchRef} setSearch={setSearch} />
+          <FilterButton filterBtnclick={filterBtnclick} />
         </div>
       </Header>
 
@@ -390,7 +384,7 @@ const FilterCoponent = ({
         </select>
       </div>
       {isFilter && (
-        <p className="text-[#2DA400] font-semibold">
+        <p className="text-[#2DA400] font-semibold pt-3">
           {Array.isArray(filterRecordItemsInfo) && filterRecordItemsInfo.length}{" "}
           Results found.
         </p>

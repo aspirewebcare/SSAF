@@ -26,7 +26,7 @@ const InputLabel = ({
         {...register(name, { required })}
         onChange={(e) => changeFunc([name], e.target.value)}
         defaultValue={defaultValue}
-        className={`outline-none border rounded-md placeholder:text-gray-500 px-3 py-[15px] w-full mt-2 mb-1  `}
+        className={`outline-none border rounded-md placeholder:text-gray-500 px-3 h-[56px] w-full mt-2`}
         placeholder={placeholder}
         type={type}
         name={name}

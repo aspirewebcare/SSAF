@@ -21,16 +21,16 @@ const SortButton = ({ sort, arr, data, sortChange }) => {
   }, [dropSort]);
 
   return (
-    <div className=" relative mr-1">
+    <div className=" relative">
       <div
         ref={button}
-        className={`w-fit bg-white border rounded-lg cursor-pointer flex items-center pl-3 mt-[2px] ${JSON.stringify(sort) === "{}"?'!pr-2':''}`}
+        className={`w-[170px] bg-white border rounded-lg cursor-pointer flex items-center pl-3 pr-2 ${JSON.stringify(sort) === "{}"?'!pr-2':''}`}
         onClick={() => setDropSort((prev) => !prev)}
       >
         <span className="text-[13px] w-full outline-none text-gray-600 py-[14px] whitespace-nowrap text-ellipsis overflow-hidden block w-9rem">
           Sort by: {JSON.stringify(sort) !== "{}" && Object.values(sort)[0]}
         </span>
-        <icons.arrowDown className="text-gray-400 text-3xl" />
+        <icons.arrowDown className="text-gray-400 text-2xl" />
       </div>
       <div
         ref={ref}

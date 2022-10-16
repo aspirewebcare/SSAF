@@ -12,9 +12,9 @@ const CountryPhone = () => {
         </div>
 
         <input
-          defaultValue="Phone Numbe"
+          defaultValue="Phone Number"
           className="outline-none text-gray-600  rounded-lg pr-1 pl-0 py-[15px] w-full"
-          placeholder="Phone Numbe"
+          placeholder="Phone Number"
           type="number"
           name="phone"
         />

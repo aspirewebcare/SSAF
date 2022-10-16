@@ -1,24 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import usflag from '../../assets/images/usa.svg';
 
-const ConsigneeDetails = ({ item, setRightSidebarOpen }) => {
-    const [forChromeMobile, setForChromeMobile] = useState(false);
-    useEffect(() => {
-        var ua = navigator.userAgent;
-        if (
-            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(
-                ua
-            )
-        ) {
-            if (
-                /Chrome/.test(navigator.userAgent) &&
-                /Google Inc/.test(navigator.vendor)
-            ) {
-                setForChromeMobile(true);
-            }
-        }
-    }, []);
-
+const ConsigneeDetails = ({ item }) => {
+  
     return (
         <div>
             <div className="flex justify-between items-center pt-6">

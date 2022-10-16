@@ -26,15 +26,13 @@ const AddNewSender = ({ setRightSidebarOpen }) => {
         { id: 5, name: 'City 5', unavailable: false },
     ]
 
-
-
     return (
         <form onSubmit={handleSubmit(onSubmit)} >
             <InputLabel customClass='mt-3' errors={errors} register={register} label='First Name' placeholder='First Name' name='first_name' />
             {errors.first_name && <p className='text-[#FE0000] text-right'>This field is required</p>}
             <InputLabel customClass='mt-3' errors={errors} register={register} label='Last Name' placeholder='Last Name' name='last_name' />
             {errors.last_name && <p className='text-[#FE0000] text-right'>This field is required</p>}
-            <InputLabel customClass='mt-3' errors={errors} register={register} label='Email' optional={true} placeholder='Email' name='email' />
+            <InputLabel customClass='mt-3' errors={errors} register={register} label='Email' placeholder='Email' name='email' />
             {errors.email && <p className='text-[#FE0000] text-right'>This field is required</p>}
             
             <div className='mt-3'>
@@ -96,7 +94,7 @@ const AddNewSender = ({ setRightSidebarOpen }) => {
                 <CustomButton
                     type='submit'
                     btnClass="h-[56px]"
-                    text='Add'
+                    text='Add 222ss'
                 />
             </div>
         </form >
