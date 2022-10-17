@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import usaFlag from "../../assets/images/usa.svg";
-import AddNewCustomer from "../../components/Customers/AddNewCustomer";
+import AddNewCustomer, { CountryCityStateZip } from "../../components/Customers/AddNewCustomer";
 import CustomButton from "../../components/shared/Buttons/CustomButton";
 import FilterButton from "../../components/shared/Buttons/FilterButton";
 import MyDropdown from "../../components/shared/Dropdown/Dropdown";
@@ -11,7 +11,6 @@ import icons from "../../components/shared/icons";
 import InputLabel from "../../components/shared/InputLabel/InputLabel";
 import RightSidebar from "../../components/shared/RightSidebar/RightSidebar";
 import SearchInput from "../../components/shared/SearchInput/SearchInput";
-import { countries } from "../../DummyData/allCountryJson";
 import { CustomersInfo } from "../../DummyData/DummyData";
 import { FilterData } from "../../hooks/FilterData";
 
@@ -84,6 +83,7 @@ const Customers = () => {
     setFilterCustomersInfo(filterData);
     setIsFilter(true);
   }
+
   const useFormReset = () => {
     reset((formValues) => {
       Object.keys(formValues).forEach((key) => {
@@ -94,6 +94,7 @@ const Customers = () => {
     setFilterCustomersInfo(CustomersInfo);
     setIsFilter(false);
   };
+  
   const customerClick = (customer) => {
     navigate(`/customer/${customer.id}`)
   }
@@ -283,19 +284,7 @@ export const FilterComponent = ({
   filterCustomersInfo,
   isFilter,
 }) => {
-  const states = [
-    { id: 2, name: "State 2", unavailable: false },
-    { id: 3, name: "State 3", unavailable: false },
-    { id: 4, name: "State 4", unavailable: true },
-    { id: 5, name: "State 5", unavailable: false },
-  ];
-  const cities = [
-    { id: 2, name: "City 2", unavailable: false },
-    { id: 3, name: "City 3", unavailable: false },
-    { id: 4, name: "City 4", unavailable: true },
-    { id: 5, name: "City 5", unavailable: false },
-  ];
-
+ 
   return (
     <div className="pb-4">
       <InputLabel
@@ -348,69 +337,7 @@ export const FilterComponent = ({
         <p className="text-[#FE0000] text-right">This field is required</p>
       )}
       <br />
-
-      <div>
-        <p className="font-semibold text-sm">Country</p>
-        <select
-          {...register("country")}
-          className={`border text-left rounded-md px-3 py-[15px] w-full mt-2 flex items-center ${errors.country ? "!border-red" : ""
-            }`}
-          name="country"
-          id="country">
-          <option value="" disabled selected hidden>
-            Country
-          </option>
-          {countries.map((country, ind) => (
-            <option key={country.code} value={country.name}>
-              {country.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <br />
-
-      <div>
-        <p className="font-semibold text-sm">State</p>
-
-        <select
-          {...register("state")}
-          className="border text-left rounded-md  px-3 h-[56px] w-full mt-2  flex items-center"
-          name="state"
-          id="state"
-        >
-          <option value="" hidden>
-            State
-          </option>
-
-          {states.map((state, ind) => (
-            <option key={state.id} value={state.name}>
-              {state.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <br />
-
-      <div>
-        <p className="font-semibold text-sm">City</p>
-
-        <select
-          {...register("city")}
-          className="border text-left rounded-md  px-3 h-[56px] w-full mt-2  flex items-center"
-          name="city"
-          id="city"
-        >
-          <option value="" hidden>
-            City
-          </option>
-
-          {cities.map((city, ind) => (
-            <option key={city.id} value={city.name}>
-              {city.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <CountryCityStateZip register={register} errors={errors} isPosttal={false} width="w-full" />
       {isFilter && (
         <p className="text-[#2DA400] font-semibold pt-3">
           {Array.isArray(filterCustomersInfo) && filterCustomersInfo.length}{" "}

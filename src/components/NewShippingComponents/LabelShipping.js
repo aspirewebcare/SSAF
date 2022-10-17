@@ -52,7 +52,7 @@ const LabelShipping = ({ currentStep, nextStepClick }) => {
           />
         </div>
       </Modal>
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap justify-between items-center">
         <AddNewShippingHeader step={currentStep} />
       </div>
       <div className="border min-h-[500px]  p-10 rounded-lg">
@@ -65,7 +65,7 @@ const LabelShipping = ({ currentStep, nextStepClick }) => {
             </h1>
             <div>
               <input
-                className="border  rounded-lg p-3 w-[400px]"
+                className="border  rounded-lg p-3 w-[300px] sm:w-[400px]"
                 placeholder="Number of boxes/pieces"
                 type="number"
                 name="label"

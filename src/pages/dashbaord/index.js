@@ -6,9 +6,8 @@ import icons from "../../components/shared/icons";
 import { barChartData } from "../../DummyData/DummyData";
 
 const Dashboard = () => {
-
   const [barData, setBarData] = useState(barChartData.weaklyData);
-
+  
   const dataChange = (value) => {
  
     if(value === 'Weakly') setBarData(barChartData.weaklyData);

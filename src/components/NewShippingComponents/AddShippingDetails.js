@@ -13,8 +13,6 @@ const AddShippingDetails = ({ shippingDetails, register, errors, nextBtnType = '
   const [selectSender, setSelectSender] = useState({});
   const [selectConsignee, setSelectConsignee] = useState({});
 
-  console.log({ shippingDetails })
-
   const nextClick = () => {
     nextStepClick(1, 2, { name: "242" });
   };

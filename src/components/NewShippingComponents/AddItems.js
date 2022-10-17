@@ -28,7 +28,7 @@ const AddItems = ({
   };
   return (
     <div className="h-full relative mt-6">
-      <div className="flex justify-between items-center w-full">
+      <div className="flex flex-wrap justify-between items-center w-full">
         <AddNewShippingHeader
           step={currentStep}
         />
@@ -39,14 +39,14 @@ const AddItems = ({
           text="+ Add New Item"
         />
       </div>
-      <div className="border py-8 rounded-lg">
+      <div className="border py-8 rounded-lg mt-5">
         <div className="px-8 mb-3">
           <p className="text-sm">Name</p>
           <p className="font-medium">{obj.name}</p>
         </div>
         <div className="flex justify-between">
           <div className="w-1/2 border-r-2 px-8 flex  flex-col  gap-4">
-            <div className="flex gap-3 justify-between">
+            <div className="flex flex-wrap gap-3 justify-between">
               <div>
                 <p className="text-sm">Quantity</p>
                 <p className="font-medium">{obj.quantity}</p>
@@ -62,7 +62,7 @@ const AddItems = ({
             </div>
             <div>
               <p className="text-sm">Item dimension</p>
-              <p className="font-medium flex gap-2">
+              <p className="font-medium flex flex-wrap gap-2">
                 <p className="flex  items-center gap-2">
                   <span className="text-gray-500">L:</span>
                   <span>{obj?.item_dimension?.length} CM</span>
@@ -79,7 +79,7 @@ const AddItems = ({
             </div>
           </div>
           <div className="w-1/2 px-8 flex  flex-col  gap-4">
-            <div className="flex gap-3 justify-between">
+            <div className="flex flex-wrap gap-3 justify-between">
               <div>
                 <p className="text-sm">Source</p>
                 <p className="font-medium">{obj.source}</p>
@@ -89,10 +89,10 @@ const AddItems = ({
                 <p className="font-medium">{obj.order_umber}</p>
               </div>
             </div>
-            <div className="flex gap-3 justify-between">
+            <div className="flex flex-wrap gap-3 justify-between">
               <div>
                 <p className="text-sm">Tracking number</p>
-                <p className="font-medium">{obj.tracking_number}</p>
+                <p className="font-medium break-all">{obj.tracking_number}</p>
               </div>
               <div>
                 <p className="text-sm">Carrier</p>

@@ -39,9 +39,9 @@ const NewShippingStepper = ({ setCurrentStep, currentStep = 1 }) => {
     let cloneStepper = [...allStepper];
     cloneStepper.forEach((element) => {
       if (currentStep >= element.id) {
-        element.isActive = false;
-      } else {
         element.isActive = true;
+      } else {
+        element.isActive = false;
       }
     });
 

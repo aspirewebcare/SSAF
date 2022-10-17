@@ -27,7 +27,7 @@ const Invoice = ({ currentStep, nextStepClick }) => {
   };
   return (
     <div className="h-full relative mt-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap justify-between items-center">
         <AddNewShippingHeader step={currentStep} />
         <div className="flex gap-3">
           <CustomButton
@@ -44,7 +44,7 @@ const Invoice = ({ currentStep, nextStepClick }) => {
           />
         </div>
       </div>
-      <div className="border pt-8 pb-16 rounded-lg">
+      <div className="border pt-8 pb-16 rounded-lg mt-5">
         <div className="w-full">
           <img className="w-full" src={invoice} alt="invoice" />
         </div>

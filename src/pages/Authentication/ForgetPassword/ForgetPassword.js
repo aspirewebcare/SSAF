@@ -23,11 +23,13 @@ const ForgetPassword = () => {
     navigate("/reset-password")
   };
   return (
-    <section className="flex   flex-col lg:flex-row items-center justify-center gap-10  bg-white min-h-screen">
-      <form
-        className="xl:px-20 pt-10 pb-0 lg:py-10 w-full lg:w-1/2"
-        onSubmit={handleSubmit(formSubmit)}
-      >
+    <section className="flex  flex-col lg:flex-row items-center justify-center !gap-10  bg-white min-h-screen">
+    <form
+      className="lg:h-[666px]  w-full xl:w-1/2"
+      onSubmit={handleSubmit(formSubmit)}
+    >
+      <div className="self-start scale-[0.9] flex lg:block w-full lg:w-[520px] ml-auto">
+
         {tokenForm ? (
           <TokenForm setTokenForm={setTokenForm} tokenSubmit={tokenSubmit} />
         ) : (
@@ -55,10 +57,12 @@ const ForgetPassword = () => {
             </p>
           </div>
         )}
+      </div>
+
       </form>
-      <div className="pb-10 lg:pb-0">
-        <div className="w-8/12  mx-auto">
-          <div className="w-full  lg:py-0"> 
+      <div className="pb-10 lg:pb-0 lg:w-1/2">
+        <div className="w-full lg:w-[500px]">
+          <div className="w-full">
           <img className="w-full" src={fogetBg} alt="login_bg" />
           </div>
         </div>

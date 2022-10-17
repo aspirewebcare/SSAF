@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiFillInfoCircle } from "react-icons/ai";
+import { HiArrowLeft } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import logout_png from "../../../assets/images/log_out.svg";
 import LoginBg from "../../../assets/images/resetBg.png";
@@ -92,21 +93,24 @@ const ResetPassword = () => {
   }
 
   return (
-    <section className="flex   flex-col lg:flex-row items-center justify-center gap-10  bg-white min-h-screen">
-      <form
-        className="xl:px-20 pt-10 pb-0  lg:py-10 w-full lg:w-1/2"
-        onSubmit={handleSubmit(formSubmit)}
-      >
-        <ResetForm
-          watch={watch}
-          isPassMatch={isPassMatch}
-          passStrength={passStrength}
-          register={register}
-        />
+    <section className="flex  flex-col lg:flex-row items-center justify-center !gap-10  bg-white min-h-screen">
+    <form
+      className="lg:h-[666px]  w-full xl:w-1/2"
+      onSubmit={handleSubmit(formSubmit)}
+    >
+      <div className="self-start scale-[0.9] flex lg:block w-full lg:w-[520px] ml-auto">
+
+          <ResetForm
+            watch={watch}
+            isPassMatch={isPassMatch}
+            passStrength={passStrength}
+            register={register}
+          />
+        </div>
       </form>
-      <div className="pb-10 lg:pb-0">
-        <div className="w-8/12  mx-auto">
-          <div className="w-full  lg:py-0">
+      <div className="pb-10 lg:pb-0 lg:w-1/2">
+        <div className="w-full lg:w-[500px]">
+          <div className="w-full">
             <img className="w-full" src={LoginBg} alt="login_bg" />
           </div>
         </div>
@@ -143,6 +147,7 @@ const ResetPassword = () => {
 export default ResetPassword;
 
 const ResetForm = ({ watch, isPassMatch, passStrength, register }) => {
+  const navigate = useNavigate();
   const newPass = {
     id: 1,
     name: "password",
@@ -160,7 +165,17 @@ const ResetForm = ({ watch, isPassMatch, passStrength, register }) => {
 
   return (
     <LoginSignupBox
-      title="Reset Password"
+      title={
+        <span className="flex items-center gap-3">
+          <HiArrowLeft
+            onClick={() => navigate(-1)}
+            className="text-4xl md:text-3xl cursor-pointer"
+          />
+          <span>Reset Password</span>
+        </span>
+      }
+
+
       titleDes="Enter your new password"
       btnText="Submit"
       isExpireTime="00:50"
