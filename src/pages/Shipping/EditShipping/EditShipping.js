@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import { AuthContext } from "../../../App";
 import AddShippingDetails from "../../../components/NewShippingComponents/AddShippingDetails";
 import CustomButton from "../../../components/shared/Buttons/CustomButton";
 import Header from "../../../components/shared/Header";
 import icons from "../../../components/shared/icons";
 import Modal from "../../../components/shared/Modal/Modal";
 import RightSidebar from "../../../components/shared/RightSidebar/RightSidebar";
-import { RecordItemsInfo as ShippingInfo } from "../../../DummyData/DummyData";
-
+import ApiRequest from "../../../hooks/ApiRequest";
+import { checkAuthorized } from "../../../hooks/commonFunc";
 
 const stepper = [
     {
@@ -47,48 +49,98 @@ const EditShipping = () => {
         register,
         errors,
         handleSubmit,
+        setValue,
+        clearErrors
     } = useForm();
     const navigate = useNavigate();
-    const { shippingId } = useParams();
+    const { shipment_uid } = useParams();
     const [allStepper] = useState(stepper || []);
     const [shippingDetails, setShippingDetails] = useState({})
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loggedUser] = useContext(AuthContext)
+    const [fetchStatus, setFetchStatus] = useState('no_fetch')
+    const [reload] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [selectSender, setSelectSender] = useState({})
+
 
     useEffect(() => {
-        let findItem = ShippingInfo.find(item => Number(item.id) === Number(shippingId))
-        setShippingDetails(findItem)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        const delayDebounceFn = setTimeout(() => {
+            if (loggedUser?.jwt_token) {
+            
+                ApiRequest('GET', `/shipments?shipment_uid=${shipment_uid}`, loggedUser.jwt_token,)
+                    .then(result => {
+                    
+                        if (result.hasOwnProperty('errors')) {
+                        } else {
+                            setShippingDetails(result.data[0])
+                        }
+                    })
+                    .catch(error => {
+                        if (!checkAuthorized(error)) {
+                            localStorage.clear();
+                            navigate('/login')
+                        }
+                    })
+                    .finally(() => {
+                        setFetchStatus('fetched')
+                    })
+            }
+        }, 0)
+        return () => clearTimeout(delayDebounceFn)
+    }, [loggedUser.jwt_token, reload])
 
 
-    const onSubmit = (data) => {
-        setIsModalOpen(true)
+
+    const editShipmentAddress = (data) => {
+        let cloneData = { ...data };
+        delete cloneData.length;
+        delete cloneData.width;
+        delete cloneData.height;
+        delete cloneData.customer_uid;
+        cloneData.shipment_dimension = { length: data.length, width: data.width, height: data.height }
+
+        patchShipment(cloneData)
     }
+
+
+    const patchShipment = (body ) => {
+   
+        setLoading(true)
+        ApiRequest('PATCH', `/shipments/${shippingDetails?.shipment_uid}`, loggedUser.jwt_token, body)
+            .then(result => {
+
+                if (result.hasOwnProperty('errors')) {
+                    toast.error(result.errors[0].message)
+                } else {
+
+                    if (result.hasOwnProperty('customer_uid')) {
+                        toast.success('Update Shipment.')
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                        navigate("/shipping");
+                    } else {
+                        toast.error(result?.detail[0]?.msg)
+                    }
+                }
+            })
+            .catch(error => {
+
+                toast.error(error)
+                if (!checkAuthorized(error)) {
+                    localStorage.clear();
+                    navigate('/login')
+                }
+            })
+            .finally(() => setLoading(false))
+
+    }
+
+
+
     return (
         <div className="container  mx-auto  pt-12 lg:pt-0 relative  overflow-hidden">
             <RightSidebar>
             </RightSidebar>
 
-            <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
-                <div className="mt-2 flex flex-col items-center justify-center">
-                    <h1 className="text-2xl font-bold text-center mt-5 mb-3">Submited</h1>
-                    <p className="text-sm text-gray-500 text-center">
-                        Shipping has Changed
-                    </p>
-                </div>
-
-                <div className="mt-8 flex justify-center gap-5">
-                    <CustomButton
-                        hadleClick={() => {
-                            setIsModalOpen(false);
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                            navigate("/shipping");
-                        }}
-                        btnClass="h-[45px]"
-                        text="Done"
-                    />
-                </div>
-            </Modal>
             <Header
                 name={
                     <span className="flex gap-2 items-center">
@@ -101,7 +153,7 @@ const EditShipping = () => {
                 }
             />
 
-            <form onSubmit={handleSubmit(onSubmit)} className="bg-white flex flex-col lg:flex-row justify-between lg:px-10 py-10 relative">
+            <div className="bg-white flex flex-col lg:flex-row justify-between lg:px-10 py-10 relative">
                 <div className="lg:hidden fixed left-0 top-0  bg-white w-full  h-full"></div>
                 <aside className="w-full lg:w-3/12  lg:border-r pb-10 relative z-[5]">
                     <div className=" lg:px-5">
@@ -137,13 +189,14 @@ const EditShipping = () => {
                     <div className="w-full relative">
                         {
                             JSON.stringify(shippingDetails) !== '{}' &&
-                            <AddShippingDetails shippingDetails={shippingDetails} register={register} errors={errors} nextBtnType={'submit'} nextBtn={'Save'} />
+                            <AddShippingDetails shippingAddressSubmit={editShipmentAddress} selectSender={selectSender} setSelectSender={setSelectSender} currentStep={1} loading={loading} setValue={setValue} shippingDetails={shippingDetails} register={register} errors={errors} nextBtnType={'submit'} nextBtn={'Save'} />
                         }
                     </div>
                 </section>
-            </form>
+            </div>
         </div>
     );
 };
 
 export default EditShipping;
+

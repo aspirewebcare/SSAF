@@ -7,10 +7,20 @@ export const FilterData = (allData, bySearch = []) => {
       if (element.text === "") {
         return singleData;
       } else {
-        if (singleData[element.search] === undefined) return true;
-        return singleData[element.search]
-          .toLowerCase()
-          .includes(element.text.toLowerCase());
+
+        if (element.search === 'country' || element.search === "state_or_region" || element.search === "city") {
+          if (singleData?.address[element.search] === undefined) return true;
+          return singleData?.address[element.search]
+            .toLowerCase()
+            .includes(element.text.toLowerCase());
+
+        } else {
+          if (singleData[element.search] === undefined) return true;
+          return singleData[element.search]
+            .toLowerCase()
+            .includes(element.text.toLowerCase());
+        }
+
       }
     });
     finalFilter = [...done];

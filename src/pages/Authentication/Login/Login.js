@@ -1,45 +1,84 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../App";
 import LoginBg from "../../../assets/images/loginBg.png";
 import { InputWithText } from "../../../components/shared/InputWithText/InputWithText";
 import LoginSignupBox from "../../../components/shared/LoginSignupBox/LoginSignupBox";
+import ApiRequest, { BASE_URL_AUTH } from "../../../hooks/ApiRequest";
+import { checkAuthorized } from "../../../hooks/commonFunc";
 
 const Login = () => {
-  const { handleSubmit, register } = useForm();
-  const [tokenForm, setTokenForm] = useState(false);
+  const { handleSubmit, register, formState: { errors } } = useForm();
   const navigate = useNavigate();
+  const [loggedUser, setLoggedUser] = useContext(AuthContext)
+  const [loading, setLoading] = useState(false)
+  const [loginErr, setLoginErr] = useState({ status: false, msg: '' })
+  const { state } = useLocation()
 
   const formSubmit = (data) => {
-    setTokenForm(true);
-    navigate("/dashboard");
-    console.log(tokenForm)
+    if (loginErr.status) {
+      setLoginErr({ status: false, msg: '' })
+    }
+  
+    setLoading(true)
+    ApiRequest('POST', '/v1/login/staff', '', data, true)
+      .then((data) => {
+        if (data) {
+          if (data.hasOwnProperty('errors')) {
+    
+            setLoginErr({ status: true, msg: data.errors[0].message })
+          }
+          else {
+            localStorage.setItem("userData", JSON.stringify(data));
+            setLoggedUser(data)
+            if (state?.prevPath) {
+              navigate(state?.prevPath)
+            } else {
+              navigate("/")
+            }
+
+          }
+        }
+      })
+      .catch((err) => {
+        setLoginErr({ status: true, msg: `${err.message}` })
+        if (!checkAuthorized(err)) {
+          localStorage.clear();
+          navigate('/login')
+        }
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   };
 
   return (
-    <section className="flex  flex-col lg:flex-row items-center justify-center !gap-10  bg-white min-h-screen">
+    <section className="flex  flex-col lg:flex-row items-center justify-center bg-white min-h-screen 2xl:gap-x-20">
       <form
-        className="lg:h-[666px]  w-full xl:w-1/2"
+        className="xl:h-[666px] w-full lg:w-1/2 "
         onSubmit={handleSubmit(formSubmit)}
       >
-        <div className="self-start scale-[0.9] flex lg:block w-full lg:w-[520px] ml-auto">
-          <LoginForm register={register} />
+        <div className="self-start flex lg:block w-full mx-auto login_form">
+          <LoginForm loginErr={loginErr} loading={loading} errors={errors} register={register} />
         </div>
       </form>
-      <div className="pb-10 lg:pb-0 lg:w-1/2">
-        <div className="w-full lg:w-[500px]">
-          <div className="w-full">
+
+      <div className="pb-10 lg:pb-0 w-full lg:w-1/2  mt-10 lg:mt-0">
+        <div className="w-[95%] mx-auto lg:mx-px login_image">
+          <div className="w-full lg:w-[500px] 2xl:w-[560px] login_image">
             <img className="w-full" src={LoginBg} alt="login_bg" />
           </div>
         </div>
       </div>
+
     </section>
   );
 };
 
 export default Login;
 
-const LoginForm = ({ register }) => {
+const LoginForm = ({ loginErr = {}, loading, register, errors }) => {
   const navigate = useNavigate();
   const inputFeilds = [
     {
@@ -48,13 +87,15 @@ const LoginForm = ({ register }) => {
       text: "Email Address ",
       type: "email",
       placeholder: "Enter Email Address",
+      errMsg: 'Enter your email'
     },
     {
       id: 2,
-      name: "pass",
+      name: "password",
       text: "Password",
       type: "password",
       placeholder: "Password",
+      errMsg: 'Enter your password'
     },
   ];
   return (
@@ -62,10 +103,12 @@ const LoginForm = ({ register }) => {
       title="Login"
       titleDes="Login to your account with the credentials"
       forgetPass={true}
+      loading={loading}
+      loginErr={loginErr}
     >
       {inputFeilds.map((item) => (
         <div key={item.id} className="my-5">
-          <InputWithText register={register} item={item} />
+          <InputWithText errMsg={item.errMsg} required={true} errors={errors} register={register} item={item} />
         </div>
       ))}
       <div className="flex flex-col sm:flex-row gap-5 justify-between">

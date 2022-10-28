@@ -5,7 +5,7 @@ import CustomButton from "../shared/Buttons/CustomButton";
 import Modal from "../shared/Modal/Modal";
 import AddNewShippingHeader from "./AddNewShippingHeader";
 
-const LabelShipping = ({ currentStep, nextStepClick }) => {
+const LabelShipping = ({ shipmentDetails, currentStep, nextStepClick }) => {
   const [paymenetRec, setPaymentRec] = useState([]);
   const [genImgCount, setGenImgCount] = useState(0);
   const [err, setErr] = useState({ status: false, message: "" });
@@ -32,7 +32,7 @@ const LabelShipping = ({ currentStep, nextStepClick }) => {
 
   return (
     <div className="h-full relative mt-6">
-      <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
+      {/* <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
         <div className="mt-2 flex flex-col items-center justify-center">
           <h1 className="text-2xl font-bold text-center mt-5 mb-3">Submited</h1>
           <p className="text-sm text-gray-500 text-center">
@@ -44,14 +44,13 @@ const LabelShipping = ({ currentStep, nextStepClick }) => {
           <CustomButton
             hadleClick={() => {
               setIsModalOpen(false);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-              navigate("/shipping");
+           
             }}
             btnClass="h-[45px]"
             text="Done"
           />
         </div>
-      </Modal>
+      </Modal> */}
       <div className="flex flex-wrap justify-between items-center">
         <AddNewShippingHeader step={currentStep} />
       </div>
@@ -97,7 +96,10 @@ const LabelShipping = ({ currentStep, nextStepClick }) => {
         />
         <CustomButton
           disable={!paymenetRec.length}
-          hadleClick={() => setIsModalOpen(true)}
+          hadleClick={() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            navigate("/shipping");
+          }}
           block={true}
           btnClass="h-[56px] w-[150px]"
           text="Done"

@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import samplePdfFile from "../../assets/sample.pdf";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../App";
 import AddNewInvoiceItem from "../../components/Invoices/AddNewInvoiceItem";
 import CustomButton from "../../components/shared/Buttons/CustomButton";
 import FilterButton from "../../components/shared/Buttons/FilterButton";
@@ -9,9 +10,11 @@ import MyDropdown from "../../components/shared/Dropdown/Dropdown";
 import Header from "../../components/shared/Header";
 import icons from "../../components/shared/icons";
 import InputLabel from "../../components/shared/InputLabel/InputLabel";
+import LoadingForFetch from "../../components/shared/LoadingForFetch";
 import RightSidebar from "../../components/shared/RightSidebar/RightSidebar";
 import SearchInput from "../../components/shared/SearchInput/SearchInput";
-import { RecordItemsInfo as InvoicesInfo } from "../../DummyData/DummyData";
+import ApiRequest from "../../hooks/ApiRequest";
+import { checkAuthorized } from "../../hooks/commonFunc";
 import { FilterData } from "../../hooks/FilterData";
 
 const Invoices = () => {
@@ -32,6 +35,48 @@ const Invoices = () => {
   } = useForm();
   const [isFilter, setIsFilter] = useState(false);
   const [sort, setSort] = useState({});
+  const [loggedUser] = useContext(AuthContext)
+  const [fetchAgain, setFetchAgain] = useState(true);
+  const [maxDataLoad, setMaxDataLoad] = useState(0)
+  const [allInvoices, setAllInvoices] = useState([]);
+  const navigate = useNavigate();
+  const [fetchStatus, setFetchStatus] = useState('no_fetch')
+  const [reload, setReload] = useState(false);
+
+  //Get All Shipping-Items 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (loggedUser?.jwt_token && fetchAgain) {
+
+        ApiRequest('GET', `/shipments?limit=50&offset=${allInvoices.length}`, loggedUser.jwt_token,)
+          .then(result => {
+
+            if (result.hasOwnProperty('errors')) {
+
+            }
+            if (result.hasOwnProperty('data')) {
+              setAllInvoices(prev => [...prev, ...result.data])
+              setMaxDataLoad(result?.match_size)
+            }
+
+          })
+          .catch(error => {
+
+            if (!checkAuthorized(error)) {
+              localStorage.clear();
+              navigate('/login')
+            }
+          })
+          .finally(() => {
+            setFetchStatus('fetched')
+          })
+      }
+    }, 0)
+    return () => clearTimeout(delayDebounceFn)
+  }, [loggedUser.jwt_token, reload, fetchAgain])
+
+
+
 
   const filterBtnclick = () => {
     setRightSidebarOpen(true);
@@ -42,11 +87,11 @@ const Invoices = () => {
     });
   };
   const InvoiceItemClick = () => {
-    console.log("Invoice click");
+
   };
 
   useEffect(() => {
-    let filter = InvoicesInfo.filter((item) => {
+    let filter = allInvoices.filter((item) => {
       if (search === "") return item;
       else {
         return `${item.tracking_number} ${item.source} ${item.destination} ${item.service_type}`
@@ -56,7 +101,7 @@ const Invoices = () => {
     });
     setFilterInvoicesInfo(filter);
     // eslint-disable-next-line
-  }, [search]);
+  }, [search, allInvoices]);
 
   const btnHandleClick = (data) => {
     let bySearch = [];
@@ -64,7 +109,7 @@ const Invoices = () => {
     for (const [key, value] of Object.entries(data)) {
       bySearch.push({ text: value, search: key });
     }
-    let filterData = FilterData(InvoicesInfo, bySearch);
+    let filterData = FilterData(allInvoices, bySearch);
     setFilterInvoicesInfo(filterData);
     setIsFilter(true);
   };
@@ -77,7 +122,7 @@ const Invoices = () => {
 
       return { ...formValues };
     });
-    setFilterInvoicesInfo(InvoicesInfo);
+    setFilterInvoicesInfo(allInvoices);
     setIsFilter(false);
   };
 
@@ -97,12 +142,12 @@ const Invoices = () => {
         dateSort("Descending");
       }
     } else {
-      setFilterInvoicesInfo(InvoicesInfo);
+      setFilterInvoicesInfo(allInvoices);
     }
   };
 
   const dateSort = (equation) => {
-    let clone = [...InvoicesInfo];
+    let clone = [...allInvoices];
 
     let filterData = clone.sort((a, b) => {
       if (equation === "Ascending") return new Date(a.date) - new Date(b.date);
@@ -111,7 +156,7 @@ const Invoices = () => {
     setFilterInvoicesInfo(filterData);
   };
   const sortFilter = (equation) => {
-    let clone = [...InvoicesInfo];
+    let clone = [...allInvoices];
 
     let filterData = clone.sort((a, b) => {
       if (equation === "low_to_high") return a.amount - b.amount;
@@ -188,13 +233,13 @@ const Invoices = () => {
         </div>
       </Header>
 
-      <div>
+      <LoadingForFetch maxDataLoad={maxDataLoad} totalLength={allInvoices?.length} fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} fetchStatus={fetchStatus}>
         <InvoicesAll
           InvoiceItemClick={InvoiceItemClick}
           filterInvoicesInfo={filterInvoicesInfo}
           search={search}
         />
-      </div>
+      </LoadingForFetch>
     </div>
   );
 };
@@ -209,7 +254,7 @@ const InvoicesAll = ({ filterInvoicesInfo, InvoiceItemClick }) => {
           filterInvoicesInfo.map((Invoice) => (
             <InvoiceLi
               onClick={InvoiceItemClick}
-              key={Invoice.id}
+              key={Invoice?.shipment_uid}
               Invoice={Invoice}
             />
           ))
@@ -222,6 +267,45 @@ const InvoicesAll = ({ filterInvoicesInfo, InvoiceItemClick }) => {
 };
 
 const InvoiceLi = ({ onClick, Invoice }) => {
+  const [loggedUser] = useContext(AuthContext)
+  const [loading, setLoading] = useState(false);
+  const [surce, setSource] = useState({})
+  const [destination, setDestination] = useState({})
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      requestApi(Invoice?.source_office_uid, setSource)
+    }, 0)
+    return () => clearTimeout(delayDebounceFn)
+  }, [])
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      requestApi(Invoice?.destination_office_uid, setDestination)
+    }, 0)
+    return () => clearTimeout(delayDebounceFn)
+  }, [])
+  const requestApi = (uId, setProperty) => {
+    ApiRequest('GET', `/offices?office_uid=${uId}`, loggedUser.jwt_token,)
+      .then(result => {
+
+        if (result.hasOwnProperty('errors')) {
+        } else {
+          if (result.hasOwnProperty('data')) {
+            setProperty(result?.data[0])
+          }
+        }
+      })
+      .catch(error => {
+
+        if (!checkAuthorized(error)) {
+          localStorage.clear();
+          navigate('/login')
+        }
+      })
+  }
+
   const items = [
     {
       id: 1,
@@ -237,27 +321,53 @@ const InvoiceLi = ({ onClick, Invoice }) => {
     },
   ];
 
-  function editInvoice() {
-    console.log("Edit Invoice");
-  }
-  function deleteInvoice() {
-    console.log("Delete Invoice");
-  }
+  function editInvoice() { }
+  function deleteInvoice() { }
 
   const downloadInvoice = () => {
-    const link = document.createElement("a");
-    link.href = samplePdfFile;
-    link.setAttribute("download", "sample.pdf");
-    document.body.appendChild(link);
-    link.click();
-    link.parentNode.removeChild(link);
+
+    setLoading(true)
+    ApiRequest('GET', `/shipments/${Invoice?.shipment_uid}/invoice/raw`, loggedUser.jwt_token, '')
+      .then(result => {
+        downloadPDF(result?.customer)
+      })
+      .catch(err => console.log({ err }))
+      .finally(() => {
+        setTimeout(() => {
+          setLoading(false)
+        }, 10000)
+      })
   };
+  const downloadPDF = (customer) => {
+    setLoading(true)
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${loggedUser.jwt_token}`);
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+    let anchor = document.createElement("a");
+    document.body.appendChild(anchor);
+    fetch(`https://development.ssaflogistics.com/cms/v1/shipments/${Invoice?.shipment_uid}/invoice/pdf`, requestOptions)
+      .then((res) => res.blob())
+      .then(data => {
+        let objectUrl = window.URL.createObjectURL(data);
+        anchor.href = objectUrl;
+        anchor.download = `${customer?.first_name + '_' + customer?.last_name}_shipment_information_pdf.pdf`;
+        anchor.click();
+        window.URL.revokeObjectURL(objectUrl);
+      })
+      .catch(err => {
+        console.log({ err })
+      })
+      .finally(() => { setLoading(false) })
+  }
   return (
     <li
-      onClick={() => onClick(Invoice)}
       className=" w-full md:w-1/2 lg:w-full p-2 lg:p-0"
     >
-      <div className="flex flex-col lg:flex-row items-start  lg:items-center gap-3  justify-between p-5  rounded-lg bg-white shadow-sm cursor-pointer">
+      <div className="flex flex-col lg:flex-row items-start   gap-3  justify-between p-5  rounded-lg bg-white shadow-sm cursor-pointer">
         <div className="flex gap-2 items-center w-full lg:w-fit">
           <div className="flex items-center justify-between lg:block w-full lg:w-[12rem]">
             <p className="hidden lg:block uppercase text-gray-500 mb-1 text-sm">
@@ -279,38 +389,40 @@ const InvoiceLi = ({ onClick, Invoice }) => {
           <p className="text-gray-500 mb-1 text-sm">Source</p>
           <div className="flex items-center gap-2">
             <p className="font-medium">
-              {Invoice.source ? Invoice.source : "-"}
+              {surce?.title || "-"}
             </p>
           </div>
         </div>
         <div className="w-[16rem]">
           <p className="text-gray-500 mb-1 text-sm">Destination</p>
           <p className="font-medium">
-            {Invoice.destination ? Invoice.destination : "-"}
+            {destination?.title || "-"}
           </p>
         </div>
         <div className="w-[7rem]">
           <p className="text-gray-500 mb-1 text-sm">Service type</p>
           <p className="font-medium">
-            {Invoice.service_type ? Invoice.service_type : "-"}
+            {Invoice?.shipment_service_type || "-"}
           </p>
         </div>
         <div className="w-[6rem]">
           <p className="text-gray-500 mb-1 text-sm">Date</p>
-          <p className="font-medium ">{Invoice.date ? Invoice.date : "-"}</p>
+          <p className="font-medium ">{Invoice.shipment_date_time_stamp_gmt || "-"}</p>
         </div>
         <div className="w-[8rem]">
           <p className="text-gray-500 mb-1 text-sm">Amount</p>
           <p className="font-medium ">
-            {Invoice.amount ? Invoice.amount + " " + Invoice.currency : "-"}
+            {Invoice.shipment_price + " USD" || "-"}
           </p>
         </div>
 
-        <div className="min-w-[110px] lg:flex  justify-center hidden">
+        <div className="min-w-[110px] lg:flex  justify-center">
           <CustomButton
+            simpleRed={true}
+            loading={loading}
             hadleClick={downloadInvoice}
             block={false}
-            btnClass="lg:w-fit lg:h-[46px] h-[56px] px-5 text-sm font-normal rounded-lg w-[56px] border border-[#FE0000] text-[#FE0000]"
+            btnClass=" h-[46px] px-5 text-sm font-normal rounded-lg  w-[110px] border border-[#FE0000] text-[#FE0000]"
             text={<p className="flex items-center gap-2">Download</p>}
           />
         </div>

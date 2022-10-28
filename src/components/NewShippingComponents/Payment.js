@@ -6,7 +6,7 @@ import AddNewShippingHeader from "./AddNewShippingHeader";
 const Payment = ({ currentStep, nextStepClick }) => {
   const [paymenetRec, setPaymentRec] = useState(false);
   const paymentReceived = () => {
-    setPaymentRec(true);
+    setPaymentRec(prev => !prev);
   };
   return (
     <div className="h-full relative mt-6">
@@ -31,9 +31,8 @@ const Payment = ({ currentStep, nextStepClick }) => {
           <CustomButton
             hadleClick={paymentReceived}
             block={!paymenetRec}
-            btnClass={`h-[60px] w-[350px] mt-10 ${
-              paymenetRec ? "border-[#FE0000] text-[#FE0000]" : ""
-            }`}
+            btnClass={`h-[60px] w-[350px] mt-10 ${paymenetRec ? "border-[#FE0000] text-[#FE0000]" : ""
+              }`}
             text={
               paymenetRec
                 ? "No, PAYment Didn’t Received"

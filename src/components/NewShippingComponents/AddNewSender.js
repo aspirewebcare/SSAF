@@ -1,57 +1,74 @@
-import React from 'react';
-import { useForm } from "react-hook-form";
-import { CountryCityStateZip } from '../Customers/AddNewCustomer';
-import CustomButton from '../shared/Buttons/CustomButton';
-import CountryPhone from '../shared/CountryPhone';
-import InputLabel from '../shared/InputLabel/InputLabel';
+import React, { useEffect, useRef, useState } from "react";
+import { countries } from "../../DummyData/allCountryJson";
+import { CountryApiReq } from "../../hooks/ApiRequest";
+import CountryPhone from "../shared/CountryPhone";
+import InputLabel from "../shared/InputLabel/InputLabel";
+import icons from "../shared/icons";
+import Loader from "../shared/Loader";
+import CustomDropDown from "../shared/Dropdown/CustomDropDown";
+import { CountryCityStateZip } from "../Customers/AddNewCustomer";
 
-const AddNewSender = ({ setRightSidebarOpen }) => {
-    const { register, handleSubmit,  formState: { errors } } = useForm();
-    const onSubmit = data => {
-        console.log(data)
-    };
-
+const AddNewCustomer = ({ setValue, register, errors, }) => {
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} >
-            <InputLabel customClass='mt-3' errors={errors} register={register} label='First Name' placeholder='First Name' name='first_name' />
-            {errors.first_name && <p className='text-[#FE0000] text-right'>This field is required</p>}
-            <InputLabel customClass='mt-3' errors={errors} register={register} label='Last Name' placeholder='Last Name' name='last_name' />
-            {errors.last_name && <p className='text-[#FE0000] text-right'>This field is required</p>}
-            <InputLabel customClass='mt-3' errors={errors} register={register} label='Email' placeholder='Email' name='email' />
-            {errors.email && <p className='text-[#FE0000] text-right'>This field is required</p>}
-            
-            <div className='mt-3'>
-                <p className='font-semibold text-sm'>Phone  Number</p>
-                <CountryPhone errors={errors} register={register}/>
-            </div>
-            <hr className='border-gray-100 mt-2' />
+        <>
+            <InputLabel
+                customClass=""
+                errors={errors}
+                register={register}
+                defaultValue=""
+                label="First Name"
+                placeholder="First Name"
+                name="first_name"
+                required={false}
+            />
+            <InputLabel
+                customClass="mt-3  "
+                errors={errors}
+                register={register}
+                defaultValue=""
+                label="Last Name"
+                placeholder="Last Name"
+                name="last_name"
+                required={false}
+            />
 
-            <h1 className='font-semibold text-xl mb-4 mt-6'>Address</h1>
-            <InputLabel errors={errors} register={register} label='Street' placeholder='Street' name='street' />
+            <div className="mb-4">
+                <InputLabel
+                    customClass="mt-3  "
+                    errors={errors}
+                    register={register}
+                    defaultValue=""
+                    label="Email"
+                    placeholder="Email"
+                    name="email"
+                />
+                {errors.email && (
+                    <p className="text-[#FE0000] text-right text-sm">Enter your email</p>
+                )}
+            </div>
+
+            <div>
+                <p className="font-semibold text-sm">Phone Number</p>
+                <CountryPhone errors={errors} register={register} />
+            </div>
+            <hr className="border-gray-100 mt-2" />
+            <h1 className="font-semibold text-xl mb-4 mt-6">Address</h1>
+            <InputLabel
+                errors={errors}
+                register={register}
+                defaultValue=""
+                label="Street"
+                placeholder="Street"
+                name="street"
+                required={false}
+            />
             <br />
-          <CountryCityStateZip width='w-[48%]'customClass='gap-x-2' register={register} errors={errors}/>
-
-            <div className="bg-white pt-3  absolute  w-full left-0 bottom-24  lg:bottom-5 px-10  flex gap-3">
-                <CustomButton
-                    type='submit'
-                    btnClass="h-[56px]"
-                    hadleClick={() => setRightSidebarOpen(false)}
-                    block={false}
-                    text='Cancel'
-                />
-                <CustomButton
-                    type='submit'
-                    btnClass="h-[56px]"
-                    text='Add 222ss'
-                />
-            </div>
-        </form >
+            <CountryCityStateZip setValue={setValue} width="w-full lg:!w-[49%]" customClass="justify-between" errors={errors} register={register} />
+            <br />
+        </>
     );
 };
 
-export default AddNewSender;
-
-
-
+export default AddNewCustomer;
 

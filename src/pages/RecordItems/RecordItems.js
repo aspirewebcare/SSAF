@@ -1,5 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../App";
 import AddNewRecordItem from "../../components/RecordItems/AddNewRecordItem";
 import RecordDetails from "../../components/RecordItems/RecordDetails";
 import CustomButton from "../../components/shared/Buttons/CustomButton";
@@ -8,9 +11,11 @@ import MyDropdown from "../../components/shared/Dropdown/Dropdown";
 import Header from "../../components/shared/Header";
 import icons from "../../components/shared/icons";
 import InputLabel from "../../components/shared/InputLabel/InputLabel";
+import LoadingForFetch from "../../components/shared/LoadingForFetch";
 import RightSidebar from "../../components/shared/RightSidebar/RightSidebar";
 import SearchInput from "../../components/shared/SearchInput/SearchInput";
-import { RecordItemsInfo } from "../../DummyData/DummyData";
+import ApiRequest from "../../hooks/ApiRequest";
+import { checkAuthorized } from "../../hooks/commonFunc";
 import { FilterData } from "../../hooks/FilterData";
 
 const RecordItems = () => {
@@ -25,12 +30,54 @@ const RecordItems = () => {
   const [filterRecordItemsInfo, setFilterRecordItemsInfo] = useState([]);
   const [recordDetailsInfo, setRecordDetailsInfo] = useState({});
   const [isFilter, setIsFilter] = useState(false);
+  const [loggedUser] = useContext(AuthContext)
+  const [fetchStatus, setFetchStatus] = useState('no_fetch')
+  const [reload, setReload] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [recordItems, setRecordItems] = useState([]);
+  const [fetchAgain, setFetchAgain] = useState(true);
+  const [maxDataLoad, setMaxDataLoad] = useState(0)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
+    resetField,
+    clearErrors,
     formState: { errors },
   } = useForm();
+
+
+
+  //Get All Record-Items 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (loggedUser?.jwt_token && fetchAgain) {
+        ApiRequest('GET', `/trackable_items?limit=50&offset=${recordItems.length}`, loggedUser.jwt_token,)
+          .then(result => {
+          
+            if (result.hasOwnProperty('errors')) {
+            } else {
+              setRecordItems([...result.data])
+              setMaxDataLoad(result?.match_size)
+            }
+            setFetchAgain(false)
+          })
+          .catch(error => {
+            if (!checkAuthorized(error)) {
+              localStorage.clear();
+              navigate('/login')
+            }
+          })
+          .finally(() => {
+            setFetchStatus('fetched')
+          })
+      }
+    }, 0)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [loggedUser.jwt_token, reload, fetchAgain])
 
   const openAddNewRecordItem = () => {
     setRightSidebarOpen(true);
@@ -60,7 +107,7 @@ const RecordItems = () => {
   };
 
   useEffect(() => {
-    let filter = RecordItemsInfo.filter((item) => {
+    let filter = recordItems.filter((item) => {
       if (search === "") return item;
       else {
         return `${item.source} ${item.order_number} ${item.tracking_number} ${item.status}`
@@ -70,19 +117,132 @@ const RecordItems = () => {
     });
     setFilterRecordItemsInfo(filter);
     // eslint-disable-next-line
-  }, [search]);
+  }, [search, recordItems]);
 
 
   const btnHandleClick = (data) => {
     if (filterComInfo.title === "Filter") filterData(data)
     if (filterComInfo.title === "Add New Item") addNewRecord(data)
     if (filterComInfo.title === "Item Details") deleteRecord(data)
+    if (filterComInfo.title === "Edit Record Details") updateRecord(data)
   };
-  const deleteRecord = (data) => {
-    console.log(data)
+
+
+
+  const cancelBtnClick = () => {
+    if (filterComInfo.title === "Filter") formReset();
+    if (filterComInfo.title === "Item Details") editRecord();
+    if (filterComInfo.title === "Edit Record Details") {
+      setRightSidebarOpen(false)
+    };
+
   }
+
+
+  //UPdate Record item
+  const updateRecord = (data) => {
+
+    setLoading(true)
+    let sendObj = { ...data }
+    delete sendObj.customer_uid;
+
+    ApiRequest('PATCH', `/trackable_items/${recordDetailsInfo?.trackable_item_uid}`, loggedUser.jwt_token, sendObj)
+      .then(result => {
+        if (result.hasOwnProperty('errors')) {
+
+          toast.error(result.errors[0].message)
+
+        } else {
+          if (result.hasOwnProperty('customer_uid')) {
+            toast.success('Update Record Details.')
+            setReload(prev => !prev)
+            setRightSidebarOpen(false)
+            setRecordItems([])
+            setReload(prev => !prev)
+            setFetchAgain(true)
+            setMaxDataLoad(0)
+            setFetchStatus('no_fetch')
+          } else {
+            toast.error(result?.detail[0]?.msg)
+          }
+        }
+      })
+      .catch(error => {
+
+        toast.error(error)
+        if (!checkAuthorized(error)) {
+          localStorage.clear();
+          navigate('/login')
+        }
+
+      })
+      .finally(() => setLoading(false))
+  }
+
+  //FOR  Delete Record
+  const deleteRecord = (data) => {
+
+    setLoading(true)
+    ApiRequest('DELETE', `/trackable_items/${recordDetailsInfo.trackable_item_uid}`, loggedUser.jwt_token, '')
+      .then(result => {
+        if (result.hasOwnProperty('errors')) {
+
+        } else {
+          toast.success('Record Deleted.')
+          setRightSidebarOpen(false)
+          setRecordItems([])
+          setReload(prev => !prev)
+          setFetchAgain(true)
+          setMaxDataLoad(0)
+          setFetchStatus('no_fetch')
+        }
+      })
+      .catch(err => {
+        toast.error('sometings is  wrong!')
+        if (!checkAuthorized(err)) {
+          localStorage.clear();
+          navigate('/login')
+        }
+      })
+      .finally(() => setLoading(false))
+  }
+
   const addNewRecord = (data) => {
-    console.log(data)
+
+    setLoading(true)
+    let sendObj = { ...data }
+    delete sendObj.customer_uid;
+
+    ApiRequest('POST', `/customers/${data.customer_uid}/trackable_items`, loggedUser.jwt_token, sendObj)
+      .then(result => {
+
+        if (result.hasOwnProperty('errors')) {
+          toast.error(result.errors[0].message)
+        } else {
+
+          if (result.hasOwnProperty('customer_uid')) {
+            toast.success('New Record Added.')
+            setReload(prev => !prev)
+            setRightSidebarOpen(false)
+            setMaxDataLoad(0)
+            setFetchAgain(true)
+            setRecordItems([])
+            setFetchStatus('no_fetch')
+          } else {
+
+          }
+        }
+      })
+      .catch(error => {
+
+        toast.error(error)
+        if (!checkAuthorized(error)) {
+          localStorage.clear();
+          navigate('/login')
+        }
+
+      })
+      .finally(() => setLoading(false))
   }
 
   const filterData = (data) => {
@@ -90,24 +250,44 @@ const RecordItems = () => {
     for (const [key, value] of Object.entries(data)) {
       bySearch.push({ text: value, search: key });
     }
-    let filterData = FilterData(RecordItemsInfo, bySearch);
+    let filterData = FilterData(recordItems, bySearch);
     setFilterRecordItemsInfo(filterData);
     setIsFilter(true);
   }
 
-
-
-
-  const useFormReset = () => {
+  const formReset = () => {
     reset((formValues) => {
       Object.keys(formValues).forEach((key) => {
         formValues[key] = "";
       });
       return { ...formValues };
     });
-    setFilterRecordItemsInfo(RecordItemsInfo);
+    setFilterRecordItemsInfo(recordItems);
     setIsFilter(false);
   };
+
+  //For Edit Record Sidebar  Open
+  const editRecord = () => {
+    setRightSidebarOpen(true)
+    setFilterComInfo({
+      title: "Edit Record Details",
+      cancelBtn: "Cancel",
+      applyBtn: "Apply",
+    });
+  }
+
+  useEffect(() => {
+    if (!rightSidebarOpen) {
+      resetField('source');
+      resetField('order_number');
+      resetField('tracking_number');
+      resetField('carrier');
+    }
+  }, [rightSidebarOpen])
+
+
+
+
   return (
     <div className="pt-12 lg:pt-0 relative overflow-hidden">
       <RightSidebar
@@ -120,13 +300,10 @@ const RecordItems = () => {
         applyBtn={filterComInfo.applyBtn}
         cancelBtn={filterComInfo.cancelBtn}
         btnHandleClick={btnHandleClick}
-        cancelClick={
-          filterComInfo.title === "Filter"
-            ? useFormReset
-            : () => setRightSidebarOpen(false)
-        }
+        cancelClick={cancelBtnClick}
         handleSubmit={handleSubmit}
         simpleRed={filterComInfo.title === "Item Details" ? true : false}
+        loading={loading}
       >
         {filterComInfo.title === "Filter" && (
           <FilterCoponent
@@ -136,7 +313,10 @@ const RecordItems = () => {
             isFilter={isFilter}
           />
         )}
-        {filterComInfo.title === "Add New Item" && <AddNewRecordItem />}
+        {filterComInfo.title === "Edit Record Details" && (
+          <AddNewRecordItem isSender={false} clearErrors={clearErrors} record={recordDetailsInfo} setValue={setValue} setFilterComInfo={setFilterComInfo} setRightSidebarOpen={setRightSidebarOpen} register={register} errors={errors} />
+        )}
+        {filterComInfo.title === "Add New Item" && <AddNewRecordItem setValue={setValue} setFilterComInfo={setFilterComInfo} setRightSidebarOpen={setRightSidebarOpen} register={register} errors={errors} />}
         {filterComInfo.title === "Item Details" && (
           <RecordDetails setRightSidebarOpen={setRightSidebarOpen} recordDetails={recordDetailsInfo} />
         )}
@@ -164,13 +344,13 @@ const RecordItems = () => {
         </div>
       </Header>
 
-      <div>
+      <LoadingForFetch maxDataLoad={maxDataLoad} totalLength={recordItems?.length} fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} fetchStatus={fetchStatus}>
         <RecordItemsAll
           recordItemClick={recordItemClick}
           filterRecordItemsInfo={filterRecordItemsInfo}
           search={search}
         />
-      </div>
+      </LoadingForFetch>
     </div>
   );
 };
@@ -179,13 +359,13 @@ export default RecordItems;
 
 const RecordItemsAll = ({ filterRecordItemsInfo, recordItemClick }) => {
   return (
-    <div className="pb-10">
+    <div className="pb-20">
       <ul className="flex flex-wrap lg:flex-col gap-y-4">
         {filterRecordItemsInfo.length ? (
           filterRecordItemsInfo.map((RecordItem) => (
             <RecordItemsLi
               onClick={recordItemClick}
-              key={RecordItem.id}
+              key={RecordItem.trackable_item_uid}
               RecordItem={RecordItem}
             />
           ))
@@ -216,10 +396,10 @@ const RecordItemsLi = ({ onClick, RecordItem }) => {
   ];
 
   function editRecordItem() {
-    console.log("Edit RecordItem");
+
   }
   function deleteRecordItem() {
-    console.log("Delete RecordItem");
+
   }
 
   const recordClick = (event) => {
@@ -233,14 +413,14 @@ const RecordItemsLi = ({ onClick, RecordItem }) => {
       onClick={(e) => recordClick(e)}
       className=" w-full md:w-1/2 lg:w-full p-2 lg:p-0"
     >
-      <div className="flex flex-col lg:flex-row items-start  lg:items-center gap-3  justify-between p-5  rounded-lg bg-white shadow-sm cursor-pointer">
+      <div className="flex flex-col lg:flex-row items-start  gap-3  justify-between p-5  rounded-lg bg-white shadow-sm cursor-pointer">
         <div className="flex gap-2 items-center w-full lg:w-3/12">
           <div className="flex items-center justify-between lg:block w-full">
             <p className="hidden lg:block uppercase text-gray-500 mb-1 text-sm">
               Source
             </p>
             <div className="font-medium capitalize w-fit whitespace-nowrap">
-              {RecordItem.source}
+              {RecordItem?.source || '-'}
             </div>
 
             <MyDropdown
@@ -261,21 +441,21 @@ const RecordItemsLi = ({ onClick, RecordItem }) => {
         <div className="w-3/12">
           <p className="text-gray-500 mb-1 text-sm">Order Number</p>
           <div className="flex items-center gap-2">
-            <p className="font-medium">{RecordItem.order_number}</p>
+            <p className="font-medium">{RecordItem?.order_number || '-'}</p>
           </div>
         </div>
         <div className="w-3/12">
           <p className="text-gray-500 mb-1 text-sm">Tracking Number</p>
-          <p className="font-medium">{RecordItem.tracking_number}</p>
+          <p className="font-medium">{RecordItem?.tracking_number || '-'}</p>
         </div>
         <div className="w-3/12">
           <p className="text-gray-500 mb-1 text-sm">Carrier</p>
-          <p className="font-medium">{RecordItem.carrier}</p>
+          <p className="font-medium">{RecordItem?.carrier || '-'}</p>
         </div>
         <div className="w-3/12">
           <p className="text-gray-500 mb-1 text-sm">Status</p>
           <p className="font-medium">
-            <Status status={RecordItem.status} />
+            <Status status={RecordItem?.delivery_status || '-'} />
           </p>
         </div>
 
@@ -297,16 +477,16 @@ const RecordItemsLi = ({ onClick, RecordItem }) => {
 
 export const Status = ({ status }) => {
   let color =
-    status === "Dispatched"
+    status === "DISPATCHED"
       ? "text-[#FE0000]"
-      : status === "In transit"
+      : status === "IN_TRANSIT"
         ? "text-[#FFAD00]"
-        : status === "Out for delivery"
+        : status === "OUT_FOR_DELIVERY"
           ? "text-[#2A40EC]"
-          : status === "Received"
+          : status === "RECEIVED"
             ? "text-[#2DA400]"
             : "";
-  return <span className={color}>{status}</span>;
+  return <span className={color}>{status || '--'}</span>;
 };
 
 const FilterCoponent = ({

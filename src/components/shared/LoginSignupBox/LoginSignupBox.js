@@ -4,7 +4,6 @@ import logo from "../../../assets/images/logo.png";
 import CustomButton from "../Buttons/CustomButton";
 
 const LoginSignupBox = ({
-  formSubmit,
   title = "",
   titleDes = "",
   children,
@@ -12,6 +11,8 @@ const LoginSignupBox = ({
   btnText = "Login",
   btnClass = "",
   isExpireTime = "",
+  loading,
+  loginErr
 }) => {
   const navigate = useNavigate();
   return (
@@ -23,11 +24,14 @@ const LoginSignupBox = ({
       <p className="text-[#212121] text-lg mb-7 leading-7">{titleDes}</p>
       {children}
       <CustomButton
-        type={btnType}
+        type='submit'
         text={btnText}
         btnClass={`mt-5 h-[50px] ${btnClass}`}
-        hadleClick={formSubmit}
+        loading={loading}
       />
+      {
+        loginErr?.status && <p className="text-sm  text-red-500 mt-2">{loginErr?.msg}</p>
+      }
     </div>
   );
 };

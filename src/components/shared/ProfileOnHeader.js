@@ -1,17 +1,23 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineLogout } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import logout_png from "../../assets/images/log_out.svg";
-import profile from "../../assets/images/profile.png";
+import profile from "../../assets/images/profile.svg";
 import icons from "../shared/icons";
 import Modal from "../shared/Modal/Modal";
 import CustomButton from "./Buttons/CustomButton";
 import MyDropdown from "./Dropdown/Dropdown";
+import { AuthContext } from "../../App";
+import ApiRequest from "../../hooks/ApiRequest";
+import { checkAuthorized } from "../../hooks/commonFunc";
+
 
 const ProfileOnHeader = ({ setOpenSideBarMobile, textCss }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [loggedUser, setLoggedUser] = useContext(AuthContext)
 
   const items = [
     {
@@ -34,13 +40,40 @@ const ProfileOnHeader = ({ setOpenSideBarMobile, textCss }) => {
     },
   ];
 
+
+  const userLogOut = () => {
+
+
+
+    setLoading(true)
+    ApiRequest('POST', '/v1/logout', loggedUser.jwt_token, '', true)
+      .then((data) => {
+         if (data === null) {
+          setIsModalOpen(false);
+          setLoggedUser({})
+          localStorage.clear();
+          navigate("/");
+        }
+      })
+      .catch(function (error) {
+  
+        if (!checkAuthorized(error)) {
+          localStorage.clear();
+          navigate('/login')
+        }
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  };
+
   return (
     <div className="flex gap-4 items-center">
       <MyDropdown
         btnText={
           <div className=" flex items-center gap-3">
-            <div className="w-12">
-              <img className="w-full" src={profile} alt="profile" />
+            <div className="w-9">
+            <img src={profile} alt="profile_image" />
             </div>
             <p
               className={`${textCss} flex items-center whitespace-nowrap font-semibold leading-tight`}
@@ -71,10 +104,8 @@ const ProfileOnHeader = ({ setOpenSideBarMobile, textCss }) => {
             text="Cancel"
           />
           <CustomButton
-            hadleClick={() => {
-              setIsModalOpen(false);
-              navigate("/");
-            }}
+            loading={loading}
+            hadleClick={userLogOut}
             btnClass="h-[45px]"
             text="Logout"
           />

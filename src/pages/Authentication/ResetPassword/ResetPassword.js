@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiFillInfoCircle } from "react-icons/ai";
 import { HiArrowLeft } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import logout_png from "../../../assets/images/log_out.svg";
 import LoginBg from "../../../assets/images/resetBg.png";
 import CustomButton from "../../../components/shared/Buttons/CustomButton";
@@ -10,6 +10,8 @@ import icons from "../../../components/shared/icons";
 import { InputWithText } from "../../../components/shared/InputWithText/InputWithText";
 import LoginSignupBox from "../../../components/shared/LoginSignupBox/LoginSignupBox";
 import Modal from "../../../components/shared/Modal/Modal";
+import ApiRequest from "../../../hooks/ApiRequest";
+import { checkAuthorized } from "../../../hooks/commonFunc";
 
 const ResetPassword = () => {
   const { handleSubmit, register, watch } = useForm();
@@ -22,6 +24,9 @@ const ResetPassword = () => {
     letter_number: false,
     special_character: false,
   });
+  const location = useLocation();
+  const [loading, setLoading] = useState(false)
+  const [loginErr, setLoginErr] = useState({ status: false, msg: '' })
 
   const formSubmit = (data) => {
     const { password, con_pass } = data;
@@ -37,7 +42,7 @@ const ResetPassword = () => {
     if (isPasswrodAllCurrent) {
       if (password === con_pass) {
         setIsPassMatch(true);
-        setIsModalOpen(true);
+        resetPass({ password: password })
       } else {
         setIsPassMatch(false);
       }
@@ -46,7 +51,6 @@ const ResetPassword = () => {
 
   useEffect(() => {
     checkpassword(watch("password"));
-
     // eslint-disable-next-line
   }, [watch("password")]);
 
@@ -92,14 +96,55 @@ const ResetPassword = () => {
     }
   }
 
-  return (
-    <section className="flex  flex-col lg:flex-row items-center justify-center !gap-10  bg-white min-h-screen">
-    <form
-      className="lg:h-[666px]  w-full xl:w-1/2"
-      onSubmit={handleSubmit(formSubmit)}
-    >
-      <div className="self-start scale-[0.9] flex lg:block w-full lg:w-[520px] ml-auto">
+  useEffect(() => {
 
+    if (location.state !== null) {
+      navigate('/login')
+    } else {
+      location.state = null
+    }
+  }, [])
+
+
+
+  const resetPass = (data) => {
+    ApiRequest('POST', '/v1/staff/password', '', data, true)
+      .then((res) => {
+        if (res) {
+       
+          if (res.hasOwnProperty('errors')) {
+    
+            setLoginErr({ status: true, msg: res.errors[0].message })
+          }
+          else {
+            if (res.hasOwnProperty('detail')) {
+              setLoginErr({ status: true, msg: res?.detail[0]?.msg })
+            } else {
+              setIsModalOpen(true);
+            }
+          }
+        }
+      })
+      .catch((err) => {
+  
+        setLoginErr({ status: true, msg: `${err.message}` })
+        if (!checkAuthorized(err)) {
+          localStorage.clear();
+          navigate('/login')
+        }
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+
+  }
+  return (
+    <section className="flex  flex-col lg:flex-row items-center justify-center bg-white min-h-screen 2xl:gap-x-20">
+      <form
+        className="xl:h-[666px] w-full lg:w-1/2 "
+        onSubmit={handleSubmit(formSubmit)}
+      >
+        <div className="self-start flex lg:block w-full ml-auto login_form " id='reset_form'>
           <ResetForm
             watch={watch}
             isPassMatch={isPassMatch}
@@ -108,9 +153,9 @@ const ResetPassword = () => {
           />
         </div>
       </form>
-      <div className="pb-10 lg:pb-0 lg:w-1/2">
-        <div className="w-full lg:w-[500px]">
-          <div className="w-full">
+      <div className="pb-10 lg:pb-0 w-full lg:w-1/2  mt-10 lg:mt-0">
+        <div className="w-[95%] mx-auto lg:mx-px login_image">
+          <div className="w-full lg:w-[500px] 2xl:w-[560px] login_image">
             <img className="w-full" src={LoginBg} alt="login_bg" />
           </div>
         </div>

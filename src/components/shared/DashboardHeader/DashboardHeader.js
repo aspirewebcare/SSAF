@@ -47,7 +47,7 @@ const Navbars = ({ sidebarCssOnMobile, setOpenSideBarMobile }) => {
     {
       id: 1,
       name: "Dashboard",
-      path: "/dashboard",
+      path: "/",
     },
     {
       id: 2,
@@ -84,9 +84,9 @@ const Navbars = ({ sidebarCssOnMobile, setOpenSideBarMobile }) => {
         <li
           key={item.id}
           onClick={() => changeRoute(item.path)}
-          className={`flex items-center gap-4 px-3 py-7 cursor-pointer text-2xl lg:text-base ${item.path.split("/")[1].toLowerCase().includes(activePageUrl.split('/')[1].toLowerCase())
-              ? " lg:border-b-[3px] text-[#FE0000] font-medium border-red-400"
-              : "hover:bg-blue-900/10"
+          className={`flex items-center gap-4 px-3 py-7 cursor-pointer text-2xl lg:text-base ${activePageUrl.toLowerCase() ===  item.path.toLowerCase()
+              ?  " lg:border-b-[3px] text-[#FE0000] font-medium border-red-400"
+              :  "hover:bg-blue-900/10"
             }`}
         >
           <span>{item.name}</span>

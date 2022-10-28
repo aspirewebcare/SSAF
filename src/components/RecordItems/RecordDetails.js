@@ -42,7 +42,7 @@ const trackings = [
     area: "New york, USA",
   },
 ];
-const RecordDetails = ({  recordDetails }) => {
+const RecordDetails = ({ recordDetails }) => {
   const [itemInOffice, setItemInOffice] = useState(false);
   const [forChromeMobile, setForChromeMobile] = useState(false);
 
@@ -98,7 +98,7 @@ const RecordDetails = ({  recordDetails }) => {
             Status
           </p>
           <p className="font-medium capitalize w-fit whitespace-nowrap">
-            <Status status={recordDetails.status} />
+            <Status status={recordDetails.delivery_status} />
           </p>
         </div>
       </div>
@@ -110,8 +110,8 @@ const RecordDetails = ({  recordDetails }) => {
             hadleClick={itemOffice}
             block={true}
             btnClass={`h-[40px] w-[150px] ${itemInOffice
-                ? "!bg-[#2DA400] text-white"
-                : "!bg-white border border-[#818181] !text-[#818181]"
+              ? "!bg-[#2DA400] text-white"
+              : "!bg-white border border-[#818181] !text-[#818181]"
               } `}
             text="Item in office"
           />
@@ -121,20 +121,28 @@ const RecordDetails = ({  recordDetails }) => {
         </div>
       </div>
       <ul>
-        {trackings.map((item) => (
-          <li
-            key={item.id}
-            className="py-4 flex justify-between items-center border-b"
-          >
-            <div>
-              <p className="text-sm">
-                <span>{item.date}</span> <span>{item.time}</span>
-              </p>
-              <p className="font-semibold">{item.title}</p>
-            </div>
-            <p>{item.area}</p>
-          </li>
-        ))}
+        {
+          recordDetails?.tracking_history ?
+
+            trackings.map((item) => (
+              <li
+                key={item.id}
+                className="py-4 flex justify-between items-center border-b"
+              >
+                <div>
+                  <p className="text-sm">
+                    <span>{item.date}</span> <span>{item.time}</span>
+                  </p>
+                  <p className="font-semibold">{item.title}</p>
+                </div>
+                <p>{item.area}</p>
+              </li>
+            ))
+            :
+            <li className="text-center mt-6">No Track Records Here!</li>
+
+        }
+
       </ul>
     </div>
   );

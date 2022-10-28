@@ -15,7 +15,8 @@ const RightSidebar = ({
     setRightSidebarOpen(false);
   },
   handleSubmit = () => { },
-  simpleRed=false,
+  simpleRed = false,
+  loading = false
 }) => {
   const [forChromeMobile, setForChromeMobile] = useState(false);
 
@@ -74,8 +75,8 @@ const RightSidebar = ({
       <div
         ref={ref}
         className={`fixed top-20 lg:top-0 right-0 w-full  lg:w-[500px] pb-7 pt-4 md:pt-7 bg-white text-black shadow-md h-screen !z-[220] duration-300 rounded-2xl lg:rounded-none ${rightSidebarOpen
-            ? "lg:translate-x-0 translate-y-0"
-            : "lg:translate-x-[200%] translate-y-full lg:translate-y-0"
+          ? "lg:translate-x-0 translate-y-0"
+          : "lg:translate-x-[200%] translate-y-full lg:translate-y-0"
           }`}
       >
         <div className="flex justify-between items-center px-7">
@@ -90,21 +91,25 @@ const RightSidebar = ({
         <div
           className={`w-full h-[62vh] overflow-y-auto overflow-x-hidden lg:h-[80vh] my-5 pl-7 pb-10  pr-5 ${childClass}`}
         >
-          {children}
+          {
+            rightSidebarOpen ?
+              children
+              : null
+          }
         </div>
-            <div
-              className={`bg-white pt-3  absolute  w-full left-0   lg:bottom-5 px-10  flex gap-3 ${forChromeMobile ? "bottom-36" : "bottom-24"
-                }`}
-            >
-              <CustomButton
-                type="button"
-                btnClass="h-[56px]"
-                hadleClick={handleClick}
-                block={false}
-                text={cancelBtn}
-              />
-              <CustomButton simpleRed={simpleRed} type="submit" btnClass="h-[56px]" text={applyBtn} />
-            </div>
+        <div
+          className={`bg-white pt-3  absolute  w-full left-0   lg:bottom-5 px-10  flex gap-3 ${forChromeMobile ? "bottom-36" : "bottom-24"
+            }`}
+        >
+          <CustomButton
+            type="button"
+            btnClass="h-[56px]"
+            hadleClick={handleClick}
+            block={false}
+            text={cancelBtn}
+          />
+          <CustomButton loading={loading} simpleRed={simpleRed} type="submit" btnClass="h-[56px]" text={applyBtn} />
+        </div>
       </div>
     </form>
   );
